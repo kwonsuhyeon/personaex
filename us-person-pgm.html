@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang=ko><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>SDG-PGMs 미국 예제(us_person) 읽기</title><style>
+:root{
+  --page:#f9f9f7; --surface:#ffffff; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781; --line:#e1e0d9;
+  --accent:#2a78d6; --accent-2:#eb6834; --accent-soft:#eaf2fc; --warn-bg:#fff4e5; --warn-ink:#8a4b00;
+  --code-bg:#f4f3ef; --stage-1:#eaf2fc; --stage-2:#eef7ea; --stage-3:#fdf0e6; --latent:#898781;
+  --max-width:1440px; --gap:24px; --radius:10px;
+  --font:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+  --mono:"D2Coding","Consolas","Cascadia Mono",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.7;word-break:keep-all}
+header.top{background:var(--surface);border-bottom:1px solid var(--line);padding:28px var(--gap)}
+header.top .inner,main{max-width:var(--max-width);margin:0 auto}
+header.top h1{margin:0 0 4px;font-size:28px;letter-spacing:-.02em}
+header.top p{margin:0;color:var(--ink-2)}
+main{padding:var(--gap)}
+section{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 32px;margin-bottom:var(--gap)}
+h2{font-size:23px;margin:0 0 16px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+h2 .no{background:var(--accent);color:#fff;border-radius:50%;width:30px;height:30px;display:inline-grid;place-items:center;font-size:15px;flex:none}
+h3{font-size:18px;margin:26px 0 8px}
+.meta{color:var(--muted);font-size:14px}
+.warn{background:var(--warn-bg);color:var(--warn-ink);padding:12px 16px;border-radius:8px;font-size:15px;margin:14px 0}
+.note{color:var(--ink-2);font-size:14.5px;border-left:3px solid var(--line);padding-left:12px;margin:8px 0 16px}
+.tablewrap{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle;text-align:left}
+th{background:var(--code-bg);font-weight:600;white-space:nowrap}
+tbody tr:hover{background:#fafaf8}
+code{font-family:var(--mono);font-size:.9em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+code.latent{color:var(--latent);border:1px dashed var(--line);background:none}
+.stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.stage{border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.stage.s1{background:var(--stage-1)}.stage.s2{background:var(--stage-2)}.stage.s3{background:var(--stage-3)}
+.stage h4{margin:0 0 6px;font-size:16px}
+.stage p{margin:6px 0 0;font-size:14.5px}
+.stage .post{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);color:var(--ink-2)}
+tr.s1 td:first-child{border-left:4px solid var(--accent)}
+tr.s2 td:first-child{border-left:4px solid #5a9e45}
+tr.s3 td:first-child{border-left:4px solid var(--accent-2)}
+ul.todo{list-style:none;padding-left:0}
+ul.todo li{margin:6px 0}
+ul.todo label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+ul.todo input{margin-top:6px;flex:none}
+ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
+@media (max-width:900px){.stages{grid-template-columns:1fr}section{padding:20px 16px}}
+</style></head><body><style>.sitenav{--sn-bg:#0b0b0b;--sn-ink:#e9e8e2;--sn-on:#2a78d6;background:var(--sn-bg);padding:0 24px;font-family:'Pretendard','Malgun Gothic',system-ui,sans-serif;font-size:14.5px;line-height:1.4;position:relative;z-index:50}.sitenav .in{max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;gap:2px;align-items:center}.sitenav a{color:var(--sn-ink);text-decoration:none;padding:11px 14px;border-bottom:3px solid transparent;display:block}.sitenav a:hover{background:rgba(255,255,255,.08)}.sitenav a.on{border-bottom-color:var(--sn-on);color:#fff;font-weight:600}.sitenav a.ext{margin-right:10px;padding-right:18px;border-right:1px solid rgba(255,255,255,.2)}</style><div class="sitenav" role="navigation" aria-label="사이트 메뉴"><div class="in"><a class="ext" href="https://kwonsuhyeon.github.io/-statistics/" target="_blank" rel="noopener">1차시 ↗</a><a href="index.html">처음</a><a href="report.html">이해 보고서</a><a href="us-person-pgm.html" class=on>미국 예제 PGM</a><a href="quickstart.html">실습 노트북</a><a href="python-basics.html">Python 기초 문법</a></div></div>
+<header class=top><div class=inner>
+<h1>SDG-PGMs 미국 예제(us_person) 읽기</h1>
+<p>NVIDIA가 공개한 확률적 그래프 모델 프레임워크와 미국 인물 생성 예제의 변수 구조 정리</p>
+</div></header>
+<main>
+
+<section>
+<h2><span class=no>1</span>무엇을 읽었나</h2>
+<ul>
+<li>대상: <a href="https://github.com/NVIDIA-NeMo/SDG-PGMs">NVIDIA-NeMo/SDG-PGMs</a> 저장소의 <code>examples/us_person/</code>. 라이선스는 Apache 2.0이다.</li>
+<li>읽은 시점: 2026-09-21. 커밋 <code>c34fd1a</code> (2026-05-29).</li>
+<li>읽은 파일: 저장소 README, 예제 README, <code>us_person_generator.py</code>, 기반 클래스 <code>src/pgms/generators/base/pgm_generator.py</code>.</li>
+<li>코드를 실행하지는 않았다. 아래 내용은 모두 코드와 README를 읽고 정리했다.</li>
+</ul>
+<p>Nemotron-Personas-Korea 카드는 인구통계 변수를 "proprietary probabilistic graphical model (PGM)"로 뽑았다고만 적었고 한국 모델의 구조는 공개하지 않았다. 이 저장소는 같은 방식으로 PGM을 만드는 틀과 미국 예제를 공개했다. 저장소 README는 SDG-PGMs가 Data Designer와 함께 Nemotron-Personas 컬렉션을 만드는 데 쓰였다고 소개한다. 한국 예제는 들어 있지 않다.</p>
+<div class=warn><strong>예제에 들어 있는 통계는 가짜다.</strong> 예제 README가 직접 밝혔다. 동봉된 집계표는 표의 짜임(컬럼과 범주)만 실제와 같고 수치는 난수이며, 우편번호·지명·인종 라벨도 자리만 채운 값이다. 이 예제로 뽑은 표본은 미국 인구를 반영하지 않는다. 실제 Nemotron-Personas-USA를 만든 집계표와 모델은 공개되지 않았다. 이 예제에서 배울 것은 수치가 아니라 변수 구조다.</div>
+</section>
+
+<section>
+<h2><span class=no>2</span>프레임워크가 하는 일</h2>
+<p>SDG-PGMs는 파이썬 라이브러리 pgmpy의 베이지안 네트워크 위에 몇 가지를 얹은 틀이다. 개인 레코드가 아니라 집계표(count table, 범주 조합별 인원수를 적은 표)를 입력으로 받는다. 집계표를 조건부 확률표(CPD)로 바꾸고 그 확률표에서 부모 변수부터 차례로 값을 뽑는다.</p>
+<div class=tablewrap><table>
+<thead><tr><th>기능</th><th>내용</th><th>코드 위치</th></tr></thead>
+<tbody>
+<tr><td>연쇄 베이지안 네트워크 (cascaded)</td><td>네트워크를 여러 단계로 나눠 차례로 돌린다. 뒤 단계는 앞 단계에서 뽑힌 값을 그대로 받아 조건으로 쓴다.</td><td><code>get_edges()</code>가 단계별 간선 목록을 돌려준다</td></tr>
+<tr><td>단계 사이 후처리</td><td>단계가 끝날 때마다 일반 파이썬 함수로 컬럼을 더하거나 고친다. 확률로 뽑을 필요가 없는 값(우편번호에서 시·주 찾기 등)을 여기서 만든다.</td><td><code>get_postprocessing_steps()</code></td></tr>
+<tr><td>잠재 변수 (latent)</td><td>네트워크 안에서만 쓰고 최종 결과에서는 뺀다.</td><td><code>get_latents()</code></td></tr>
+<tr><td>집계표 → CPD</td><td>집계표에 없는 조합을 0으로 채우고 아주 작은 값(pseudocount, 기본 1e-10)을 더한 뒤 정규화한다. 확률이 0이 되어 샘플링이 멈추는 일을 막는 장치다.</td><td><code>fill_na_and_gen_cpd()</code></td></tr>
+<tr><td>조건을 걸어 뽑기 (evidence)</td><td>"서부 지역만"처럼 조건을 주면, 일단 넉넉히 뽑은 뒤 조건에 맞지 않는 표본을 버리는 기각 샘플링을 한다. 조건이 너무 드물면 오류를 낸다.</td><td><code>_rejection_sample()</code></td></tr>
+<tr><td>Data Designer 연결</td><td>만든 생성기를 Data Designer의 컬럼 생성기로 꽂는다. PGM이 인구통계 변수를 만들고 LLM이 서술문을 쓰는 파이프라인이 이렇게 이어진다.</td><td><code>data_designer_plugins/pgm_generator_plugin.py</code></td></tr>
+</tbody></table></div>
+<p>생성기를 새로 만들려면 <code>PGMGenerator</code>를 상속해 네 가지를 채운다. 집계표를 읽는 <code>get_data()</code>, 변수와 범주를 선언하는 <code>get_variables()</code>, 간선을 선언하는 <code>get_edges()</code>, 확률표를 만드는 <code>get_cpds()</code>다.</p>
+</section>
+
+<section>
+<h2><span class=no>3</span>미국 예제의 전체 흐름</h2>
+<p>변수 29개를 선언하고 베이지안 네트워크 3개를 차례로 돌린다. 29개 가운데 12개는 잠재 변수라 결과에서 빠지고 후처리에서 만든 컬럼이 더해져 최종 표본은 23개 컬럼이 된다.</p>
+<div class=stages>
+<div class="stage s1"><h4>1단계. 기본 인구통계</h4>
+<p><code>zipcode</code>, <code>sex</code>, <code>age_group</code>, <code>age</code></p>
+<p class=post>후처리: 우편번호에서 앞 4자리(<code>zip_prefix4</code>)와 지역 유형(<code>zipcode_category</code>)을 만든다. 연령대를 변수별 구간 4종으로 바꿔 붙인다.</p></div>
+<div class="stage s2"><h4>2단계. 주소, 혼인·학력, 인종</h4>
+<p><code>street_name</code>, <code>unit</code>, <code>marital_status</code>, <code>education_level</code>, <code>bachelors_field</code>, <code>ethnicity</code>, <code>race_broad</code>, <code>race_group</code>, <code>ethnicity_origin</code></p>
+<p class=post>후처리: 인종·민족 변수를 합쳐 <code>ethnic_background</code>를 만든다. 학사 미만이면 전공을 <code>no_degree</code>로 바꾼다. 학력과 전공을 한 변수(<code>education_level_bachelors</code>)로 합친다.</p></div>
+<div class="stage s3"><h4>3단계. 직업과 이름</h4>
+<p><code>occupation</code>, <code>detailed_occupation</code>, <code>last_name</code>, <code>first_name</code>, <code>middle_name</code></p>
+<p class=post>후처리: 세부 직업을 <code>occupation</code> 컬럼에 덮어쓴다. 85세 이상은 <code>not_in_workforce</code>로 바꾼다. 시·주·카운티, 생년월일, 전화번호, 이메일, 사회보장번호 형식의 ID, uuid를 만든다.</p></div>
+</div>
+<p>단계를 나눈 이유는 코드에서 드러난다. 직업의 부모인 <code>education_level_bachelors</code>는 학력과 전공이 둘 다 뽑힌 뒤에야 만들 수 있고, 이름의 부모인 <code>ethnic_background</code>도 인종 변수 4개가 뽑힌 뒤에 규칙으로 정해진다. 확률로 뽑는 일과 규칙으로 계산하는 일이 번갈아 나오기 때문에 네트워크를 끊고 그 사이에 후처리를 끼웠다.</p>
+</section>
+
+<section>
+<h2><span class=no>4</span>변수별 부모와 집계표</h2>
+<p>간선 목록(<code>get_edges()</code>)과 확률표(<code>get_cpds()</code>)를 합쳐 한 표로 옮겼다. 부모가 없는 변수는 <code>zipcode</code> 하나다. 점선 테두리는 결과에서 빠지는 잠재 변수다.</p>
+<div class=tablewrap><table>
+<thead><tr><th>단계</th><th>변수 (자식)</th><th>부모</th><th>확률표를 만든 집계표</th><th>비고</th></tr></thead>
+<tbody>
+<tr class=s1><td>1</td><td><code>zipcode</code></td><td>없음</td><td><code>population_by_zipcode</code></td><td>우편번호별 인구수가 곧 출발 확률이다</td></tr>
+<tr class=s1><td>1</td><td><code>sex</code></td><td><code>zipcode</code></td><td><code>age_group_sex_by_zipcode</code>를 성별로 합산</td><td></td></tr>
+<tr class=s1><td>1</td><td><code class=latent>age_group</code></td><td><code>zipcode</code>, <code>sex</code></td><td><code>age_group_sex_by_zipcode</code></td><td></td></tr>
+<tr class=s1><td>1</td><td><code>age</code></td><td><code class=latent>age_group</code>, <code>sex</code></td><td><code>age_by_age_group_sex</code></td><td>연령대 안에서 한 살 단위 나이를 뽑는다</td></tr>
+<tr class=s2><td>2</td><td><code>marital_status</code></td><td><code>zipcode</code>, <code>sex</code>, <code class=latent>age_group_marital</code></td><td><code>marital_status_by_age_sex_zipcode</code></td><td></td></tr>
+<tr class=s2><td>2</td><td><code>education_level</code></td><td><code>zipcode</code>, <code>sex</code>, <code class=latent>age_group_education</code></td><td><code>education_by_age_sex_zipcode</code></td><td></td></tr>
+<tr class=s2><td>2</td><td><code>bachelors_field</code></td><td><code>zipcode</code>, <code>sex</code>, <code class=latent>age_group_bachelors</code></td><td><code>bachelors_field_by_age_sex_zipcode</code></td><td>학력과 무관하게 일단 뽑고 학사 미만이면 후처리에서 지운다</td></tr>
+<tr class=s2><td>2</td><td><code class=latent>ethnicity</code></td><td><code class=latent>zip_prefix4</code></td><td><code>ethnicity_by_zip_prefix</code></td><td>히스패닉 여부</td></tr>
+<tr class=s2><td>2</td><td><code class=latent>race_broad</code></td><td><code class=latent>zip_prefix4</code>, <code class=latent>ethnicity</code></td><td><code>race_broad_by_zip_prefix_ethnicity</code></td><td></td></tr>
+<tr class=s2><td>2</td><td><code class=latent>race_group</code></td><td><code class=latent>zip_prefix4</code>, <code class=latent>race_broad</code></td><td><code>race_group_by_zip_prefix_race_broad</code></td><td></td></tr>
+<tr class=s2><td>2</td><td><code class=latent>ethnicity_origin</code></td><td><code class=latent>zip_prefix4</code>, <code class=latent>ethnicity</code></td><td><code>ethnicity_origin_by_zip_prefix_ethnicity</code></td><td></td></tr>
+<tr class=s2><td>2</td><td><code>street_name</code>, <code>unit</code></td><td><code class=latent>zipcode_category</code></td><td><code>street_name_by_zipcode_category</code>, <code>unit_by_zipcode_category</code></td><td>pseudocount를 0으로 뒀다</td></tr>
+<tr class=s3><td>3</td><td><code>occupation</code></td><td><code class=latent>education_level_bachelors</code>, <code class=latent>age_group_occupation</code></td><td><code>occupation_by_education_age</code></td><td>성별과 지역은 부모가 아니다</td></tr>
+<tr class=s3><td>3</td><td><code>detailed_occupation</code></td><td><code>occupation</code>, <code>sex</code></td><td><code>detailed_occupation_by_occupation_sex</code></td><td>pseudocount를 0으로 뒀다</td></tr>
+<tr class=s3><td>3</td><td><code>last_name</code></td><td><code>ethnic_background</code></td><td><code>last_name_by_ethnic_background</code></td><td></td></tr>
+<tr class=s3><td>3</td><td><code>first_name</code>, <code>middle_name</code></td><td><code>ethnic_background</code>, <code>sex</code></td><td><code>first_name_by_ethnic_background_sex</code>, <code>middle_name_by_ethnic_background_sex</code></td><td></td></tr>
+</tbody></table></div>
+<div class=note>확률표 없이 규칙으로만 정해지는 값: <code>city</code>, <code>state</code>(우편번호 대응표), <code>county</code>(우편번호에 걸친 카운티 가운데 무작위 하나), <code>street_number</code>(평균 200인 기하분포), <code>birth_date</code>, <code>phone_number</code>(우편번호의 지역번호), <code>email_address</code>, <code>national_id</code>, <code>uuid</code>.</div>
+</section>
+
+<section>
+<h2><span class=no>5</span>코드를 읽으며 눈에 띈 설계</h2>
+<h3>직업은 학력·전공과 연령대만 본다</h3>
+<p><code>occupation</code>의 부모는 학력과 전공을 합친 변수, 그리고 직업용 연령대 둘뿐이다. 성별은 그다음 <code>detailed_occupation</code>에서야 들어오고, 지역은 직업에 전혀 영향을 주지 않는다. 직업 대분류가 같으면 어느 지역에 살든 세부 직업 분포가 같다는 뜻이다. 학력과 전공을 따로 부모로 두지 않고 <code>bachelors-공학</code>처럼 한 변수로 합쳐 놓았다. 집계표가 학력·전공 조합별로 직업 인원을 세어 둔 교차표여서 학력과 전공의 교호작용이 확률표에 그대로 들어간다.</p>
+<h3>연령대 구간을 변수마다 따로 둔다</h3>
+<p>나이는 한 번만 뽑지만 연령대 변수는 다섯 개다. 기본 <code>age_group</code> 외에 혼인용, 학력용, 전공용, 직업용이 따로 있고, 대응표(<code>age_group_map</code>)로 바꿔 붙인다. 통계표마다 연령 구간을 끊는 방식이 다르기 때문에 생긴 구조로 보인다 <strong>(추정)</strong>. 동봉된 가짜 데이터에서는 전공용만 구간이 다르다. 기본 구간이 <code>under_18</code>, <code>18_24</code>, <code>25_44</code>, <code>45_84</code>, <code>85_plus</code>인데 전공용은 앞의 둘을 <code>under_25</code>로 합쳤다. 한국 통계로 옮길 때도 표마다 연령 구간이 달라 같은 장치가 필요해진다.</p>
+<h3>단계는 앞 단계 표본을 넘겨받아 이어진다</h3>
+<p>2단계 네트워크에도 <code>zipcode</code>와 <code>sex</code> 노드가 있지만 확률표는 주지 않았다. 기반 클래스는 확률표가 없는 노드에 균등분포를 넣어 두는데, 실제로는 1단계에서 뽑힌 값이 <code>partial_samples</code>로 고정돼 들어가므로 균등분포는 쓰이지 않는다. <code>ethnic_background</code>에 균등분포를 준 것도 같은 이유다. 값은 2단계 후처리에서 이미 정해져 있다.</p>
+<h3>pseudocount를 0으로 둔 곳</h3>
+<p>기본값 1e-10은 집계표에 없는 조합에도 아주 작은 확률을 준다. 세부 직업, 도로명, 호수에는 0을 줬다. 세부 직업은 상위 직업 안에서만 의미가 있으므로 작은 값이라도 더하면 "관리직인데 세부 직업은 간호사" 같은 불가능한 조합이 나올 수 있다는 주석이 코드에 달려 있다.</p>
+<h3>재현성의 한계</h3>
+<p><code>seed</code>는 NumPy에만 걸린다. PGM이 뽑는 컬럼은 같은 시드에서 같은 값이 나오지만 후처리에서 파이썬 <code>random</code>으로 만드는 카운티·전화번호·ID·이메일·생일·uuid는 돌릴 때마다 달라진다. 예제 README에 그렇게 적혀 있다.</p>
+<h3>프라이버시에 대한 입장</h3>
+<p>README는 집계표에서 표본을 뽑으므로 원자료의 행을 복사하지 않는다고 설명한다. 다만 차분 프라이버시 같은 형식적 보장은 이 틀이 제공하지 않는다고 적었다. 집계표의 출처로는 공공 영역이거나 허용적 라이선스인 정부 통계를 권한다.</p>
+</section>
+
+<section>
+<h2><span class=no>6</span>한국판과 견주어 보기</h2>
+<p>한국 모델의 구조는 공개되지 않았으므로 아래 비교의 한국 쪽은 공개된 컬럼과 카드의 서술에 근거한다. 구조에 관한 부분은 <strong>(추정)</strong>이다.</p>
+<div class=tablewrap><table>
+<thead><tr><th>항목</th><th>미국 예제 (코드로 확인)</th><th>한국판 (카드와 컬럼으로 확인)</th></tr></thead>
+<tbody>
+<tr><td>지리</td><td>우편번호에서 출발한다. 시·주·카운티는 대응표로 붙인다.</td><td><code>district</code>(시군구), <code>province</code>(시도). 출발 변수가 무엇인지는 공개되지 않았다.</td></tr>
+<tr><td>공통 변수</td><td colspan=2>성별, 나이, 혼인상태, 학력, 전공, 직업, 이름</td></tr>
+<tr><td>한쪽에만 있는 변수</td><td>인종·민족 계열 5개, 주소, 전화번호, 이메일, 사회보장번호 형식 ID</td><td>병역, 가구 유형, 주거 형태</td></tr>
+<tr><td>직업의 조건</td><td>학력×전공×연령대의 교차표 하나로 직업을 뽑고, 직업×성별로 세부 직업을 뽑는다.</td><td>카드는 세부 직업 배정에서 성별·소득·학력·전공이 각각 독립적으로 영향을 준다고 가정했고 교호작용은 넣지 않았다고 밝혔다.</td></tr>
+<tr><td>이름</td><td>인종·민족 배경과 성별에 조건부</td><td>대법원 이름 자료를 썼다고 카드에 나온다. 조건 변수는 공개되지 않았다.</td></tr>
+</tbody></table></div>
+<p>직업 항목의 차이는 집계표 사정에서 나온 것으로 보인다 <strong>(추정)</strong>. 미국 예제는 학력·전공·연령대를 한꺼번에 교차한 직업 집계표가 있다는 전제로 짜여 있다. 한국 카드는 독립 가정의 이유로 "공개 데이터의 한계"와 "확률적 그래프 모델의 실무적 제약"을 들었다. 교차표를 구하지 못하면 요인별 주변 분포를 따로 구해 곱하는 수밖에 없고 그러면 교호작용이 빠진다.</p>
+<h3>이 프로젝트의 축소 모형과 견주면</h3>
+<p><code>scripts/10_toy_pgm.py</code>는 성별 → 연령대 → 혼인상태 → 가구유형의 사슬 하나를 만들어 조상 샘플링을 했다. 원리는 같다. 미국 예제에서 더 볼 것은 세 가지다. 한 변수에 부모가 둘이나 셋 붙는다. 네트워크를 끊고 그 사이에 규칙 기반 후처리를 넣는다. 결과에 내보내지 않는 잠재 변수로 통계표 사이의 구간 차이를 맞춘다.</p>
+</section>
+
+<section>
+<h2><span class=no>7</span>수준별 직무 페르소나에 옮긴다면</h2>
+<p>여기부터는 코드에서 확인한 내용이 아니라 이 프로젝트에 적용할 때의 생각이다.</p>
+<p>미국 예제의 틀에서 SQF/NCS 수준은 3단계의 직업 뒤에 오는 변수로 넣는 것이 자연스럽다. 부모 후보는 직업, 학력, 직업용 연령대다. 연령대는 경력 연수를 대신하는 변수가 된다. 걸림돌은 집계표다. 직업×학력×연령대 조합별로 수준 분포를 센 공식 통계가 있어야 확률표를 만들 수 있다. 그런 표가 없으면 한국판 카드처럼 요인별로 독립을 가정하거나, 수준 정의 문서의 학력·경력 요건을 규칙으로 옮겨 후처리에서 정해야 한다. 규칙으로 정하면 확률 모형이 아니라 결정 규칙이 되므로 같은 직업·학력·연령대인 사람은 모두 같은 수준을 받는다.</p>
+<ul class=todo>
+<li><label><input type=checkbox data-key=t1><span>직업×학력×연령(또는 경력) 교차표를 주는 국내 공개 통계가 있는지 찾는다.</span></label></li>
+<li><label><input type=checkbox data-key=t2><span>NCS 수준 정의의 학력·경력 요건을 규칙 표로 옮겨 본다.</span></label></li>
+<li><label><input type=checkbox data-key=t3><span>예제를 실제로 돌려 본다. 저장소는 Python 3.10 이상을 요구하므로(<code>pyproject.toml</code>) 이 프로젝트의 3.9 가상환경과 별도의 환경이 필요하다.</span></label></li>
+<li><label><input type=checkbox data-key=t4><span>Hugging Face 버전에서 학력×연령대별 직업 분포를 세어, 한국판에 교호작용이 얼마나 남아 있는지 본다.</span></label></li>
+</ul>
+</section>
+
+<section>
+<h2><span class=no>8</span>출처</h2>
+<ul>
+<li>NVIDIA-NeMo, <a href="https://github.com/NVIDIA-NeMo/SDG-PGMs">SDG-PGMs 저장소</a> (Apache 2.0, 커밋 c34fd1a)</li>
+<li>같은 저장소, <a href="https://github.com/NVIDIA-NeMo/SDG-PGMs/tree/main/examples/us_person">examples/us_person</a> (README와 <code>us_person_generator.py</code>)</li>
+<li>NVIDIA NeMo Data Designer 개발 노트, <a href="https://docs.nvidia.com/nemo/datadesigner/dev-notes/designing-nemotron-personas">Designing Nemotron-Personas</a></li>
+<li>Hugging Face, <a href="https://huggingface.co/datasets/nvidia/Nemotron-Personas-Korea">nvidia/Nemotron-Personas-Korea 데이터셋 카드</a> (PGM과 독립 가정에 관한 서술)</li>
+</ul>
+</section>
+
+</main>
+<script>
+(function(){
+  var PREFIX="us_person_pgm.todo.";
+  var boxes=document.querySelectorAll("ul.todo input[type=checkbox]");
+  boxes.forEach(function(box){
+    var key=PREFIX+box.dataset.key;
+    try{box.checked=localStorage.getItem(key)==="1";}catch(e){}
+    box.addEventListener("change",function(){
+      try{localStorage.setItem(key,box.checked?"1":"0");}catch(e){}
+    });
+  });
+})();
+</script>
+</body></html>

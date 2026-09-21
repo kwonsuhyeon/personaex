@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang=ko><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>Nemotron-Personas-Korea 학습 노트</title><style>
+:root{
+  --page:#f9f9f7; --surface:#ffffff; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781; --line:#e1e0d9;
+  --accent:#2a78d6; --accent-2:#eb6834; --accent-soft:#eaf2fc;
+  --max-width:1440px; --gap:24px; --radius:10px;
+  --font:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.7;word-break:keep-all}
+header.top{background:var(--surface);border-bottom:1px solid var(--line);padding:40px var(--gap) 32px}
+header.top .inner,main,footer .inner{max-width:var(--max-width);margin:0 auto}
+h1{margin:0 0 8px;font-size:32px;letter-spacing:-.02em}
+header.top p{margin:0;color:var(--ink-2);max-width:80ch}
+main{padding:var(--gap)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:var(--gap)}
+.card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 26px;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card.ext{border-left:4px solid var(--accent-2);grid-column:1/-1}
+.cards{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+.card h2{font-size:20px;margin:6px 0 8px;letter-spacing:-.01em}
+.card p{margin:0 0 14px;color:var(--ink-2);font-size:15px}
+.tag{color:var(--muted);font-size:13px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:10px}
+.go{margin-top:auto;color:var(--accent);font-size:14.5px;font-weight:600}
+.dl{margin:var(--gap) 0 0;color:var(--ink-2);font-size:15px}
+footer{border-top:1px solid var(--line);padding:24px var(--gap) 40px;color:var(--ink-2);font-size:14px}
+footer ul{margin:6px 0 0;padding-left:20px}
+a{color:var(--accent)}
+</style></head><body>
+<style>.sitenav{--sn-bg:#0b0b0b;--sn-ink:#e9e8e2;--sn-on:#2a78d6;background:var(--sn-bg);padding:0 24px;font-family:'Pretendard','Malgun Gothic',system-ui,sans-serif;font-size:14.5px;line-height:1.4;position:relative;z-index:50}.sitenav .in{max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;gap:2px;align-items:center}.sitenav a{color:var(--sn-ink);text-decoration:none;padding:11px 14px;border-bottom:3px solid transparent;display:block}.sitenav a:hover{background:rgba(255,255,255,.08)}.sitenav a.on{border-bottom-color:var(--sn-on);color:#fff;font-weight:600}.sitenav a.ext{margin-right:10px;padding-right:18px;border-right:1px solid rgba(255,255,255,.2)}</style><div class="sitenav" role="navigation" aria-label="사이트 메뉴"><div class="in"><a class="ext" href="https://kwonsuhyeon.github.io/-statistics/" target="_blank" rel="noopener">1차시 ↗</a><a href="index.html" class=on>처음</a><a href="report.html">이해 보고서</a><a href="us-person-pgm.html">미국 예제 PGM</a><a href="quickstart.html">실습 노트북</a><a href="python-basics.html">Python 기초 문법</a></div></div>
+<header class=top><div class=inner>
+<h1>Nemotron-Personas-Korea 학습 노트</h1>
+<p>NVIDIA가 공개한 한국형 합성 페르소나 데이터를 공부하며 정리한 문서 모음이다. 데이터가 만들어진 방식부터 직접 불러와 직무별로 살펴보는 실습까지 담았다.</p>
+</div></header>
+<main>
+<div class=cards>
+<a class="card ext" href="https://kwonsuhyeon.github.io/-statistics/" target="_blank" rel="noopener"><span class=tag>1차시 · 외부 사이트</span><h2>파이썬을 활용한 기초통계 분석</h2><p>Python과 VS Code를 설치하고 pandas로 데이터를 불러와 기초통계를 내는 실습 매뉴얼이다. Python이 처음이면 여기부터 본다.</p><span class=go>새 탭에서 열기 ↗</span></a><a class=card href="report.html"><span class=tag>문서 1</span><h2>Nemotron-Personas-Korea 이해 보고서</h2><p>데이터가 어떻게 만들어졌는지, 26개 컬럼이 어떤 분포인지, 서술문은 어떤 모습인지 정리했다. Hugging Face 버전과 NGC 확장 버전의 차이도 여기에 있다.</p><span class=go>읽기 →</span></a><a class=card href="us-person-pgm.html"><span class=tag>문서 2</span><h2>SDG-PGMs 미국 예제(us_person) 읽기</h2><p>NVIDIA가 공개한 확률적 그래프 모델 프레임워크의 미국 인물 생성 예제를 코드로 읽었다. 변수 29개가 어떤 순서로, 무엇을 조건으로 뽑히는지 표로 옮겼다.</p><span class=go>읽기 →</span></a><a class=card href="quickstart.html"><span class=tag>문서 3</span><h2>실습: 불러오기, 기초통계, 직무별로 보기</h2><p>Hugging Face에서 데이터를 받아 기초통계를 내고, 직업명으로 직무 집단을 골라 취업자 전체와 비교한다. 실행 결과가 함께 들어 있다.</p><span class=sub>노트북 파일: notebooks/01_hf_quickstart.ipynb</span><span class=go>읽기 →</span></a><a class=card href="python-basics.html"><span class=tag>문서 4</span><h2>실습 노트북에 나온 Python 기초 문법</h2><p>노트북을 읽는 데 필요한 문법만 골라 실제 코드로 설명했다. 1차시에서 쓴 pandas가 아니라 polars를 쓴 이유와 두 라이브러리의 대응표가 있다.</p><span class=go>읽기 →</span></a>
+</div>
+<p class=dl>실습 노트북 원본은 <a href="notebooks/01_hf_quickstart.ipynb" download>01_hf_quickstart.ipynb</a>로 받는다. 실행 방법은 실습 문서의 0절에 있다.</p>
+</main>
+<footer><div class=inner>
+<strong>출처와 라이선스</strong>
+<ul>
+<li>데이터: <a href="https://huggingface.co/datasets/nvidia/Nemotron-Personas-Korea">NVIDIA Nemotron-Personas-Korea</a> (Hugging Face 버전, CC BY 4.0). 문서에 실린 페르소나 예시는 이 데이터의 원문이고, 등장하는 인물은 모두 합성된 가상 인물이다.</li>
+<li>미국 예제: <a href="https://github.com/NVIDIA-NeMo/SDG-PGMs">NVIDIA-NeMo/SDG-PGMs</a> (Apache 2.0).</li>
+<li>NGC 확장 버전의 원문은 이 사이트에 싣지 않았다. 필드 구성과 집계 수치만 언급한다.</li>
+</ul>
+</div></footer>
+</body></html>
