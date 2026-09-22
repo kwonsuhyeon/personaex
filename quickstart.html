@@ -29,6 +29,7 @@ main{min-width:0}
 .md pre{background:var(--code-bg);border-radius:8px;padding:12px 16px;overflow-x:auto;font-size:13.5px;line-height:1.55;position:relative}
 .md pre code{background:none;padding:0;font-size:1em}
 .md a{color:var(--accent)}
+.cell.mdcell{margin:10px 0 14px}
 .cell{margin:16px 0 0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--code-bg)}
 .cellbar{display:flex;justify-content:space-between;align-items:center;padding:4px 8px 4px 14px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted)}
 .cellno{font-family:var(--mono)}
@@ -144,7 +145,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 위에서부터 차례로 실행하면 된다. 직무를 바꿔 보려면 4절의 <code>JOB_KEYWORDS</code>만 고쳐서 4절을 다시 실행한다.</p>
 <p>코드가 낯설면 <a href="python-basics.html" target="_blank" rel="noopener">이 노트북에 나온 Python 기초 문법 (새 탭)</a>을 옆에 열어 두고 읽는다. pandas가 아니라 polars를 쓴 이유도 거기에 적었다.</p></div><div class=md><h2 id="0-준비">0. 준비</h2>
 <h3 id="가상환경과-커널">가상환경과 커널</h3>
-<p>가상환경은 프로젝트마다 따로 쓰는 파이썬 설치본이다. 여기서 설치한 polars 같은 패키지가 다른 프로젝트나 PC 전체의 파이썬과 섞이지 않는다. 아래 네 줄을 터미널(명령 프롬프트)에서 한 번만 실행한다.</p>
+<p>가상환경은 프로젝트마다 따로 쓰는 파이썬 설치본이다. 여기서 설치한 polars 같은 패키지가 다른 프로젝트나 PC 전체의 파이썬과 섞이지 않는다. 아래 네 줄을 한 번만 실행한다.</p>
+<p><strong>명령 프롬프트(cmd)에서 실행한다.</strong> 시작 메뉴에서 <code>cmd</code>를 검색해 연다. PowerShell에서는 <code>%USERPROFILE%</code> 표기가 통하지 않고 <code>activate</code>가 실행 정책에 막혀서 그대로 되지 않는다. VS Code 터미널도 기본이 PowerShell이므로, 터미널 오른쪽 위의 <code>+</code> 옆 화살표에서 <strong>Command Prompt</strong>를 골라 연다.</p>
 <table>
 <thead>
 <tr>
@@ -172,19 +174,40 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </tbody>
 </table>
 <p>가상환경은 Dropbox나 OneDrive처럼 동기화되는 폴더 밖에 만든다. 동기화 폴더 안에 두면 파일 잠금 때문에 설치가 도중에 깨질 수 있다. <code>%USERPROFILE%\.venvs</code>가 그 밖에 있는 자리다.</p>
-<pre><code>python -m venv %USERPROFILE%\.venvs\nvdia_persona
+<div class="cell mdcell"><div class=cellbar><span class=cellno>복사해서 쓰는 내용</span><button class=copy type=button data-code="python -m venv %USERPROFILE%\.venvs\nvdia_persona
+%USERPROFILE%\.venvs\nvdia_persona\Scripts\activate
+pip install polars matplotlib huggingface_hub python-dotenv pyarrow ipykernel
+python -m ipykernel install --user --name nvdia_persona --display-name &quot;Python 3.9 (nvdia_persona)&quot;">복사</button></div><pre class=code><code>python -m venv %USERPROFILE%\.venvs\nvdia_persona
 %USERPROFILE%\.venvs\nvdia_persona\Scripts\activate
 pip install polars matplotlib huggingface_hub python-dotenv pyarrow ipykernel
 python -m ipykernel install --user --name nvdia_persona --display-name &quot;Python 3.9 (nvdia_persona)&quot;
-</code></pre>
+</code></pre></div>
 <p>VS Code에서 이 노트북을 열고 오른쪽 위의 커널 선택에서 <strong>Python 3.9 (nvdia_persona)</strong> 를 고른다. 다른 커널을 고르면 첫 셀에서 <code>No module named 'polars'</code> 오류가 난다.</p>
 <h3 id="설정-파일-env-만들기">설정 파일(.env) 만들기</h3>
 <p>경로, 시드, 글꼴, 색상 같은 설정값은 코드에 적지 않고 프로젝트 폴더의 <code>.env</code> 파일에서 읽는다(<code>scripts/config.py</code>가 읽는다). 처음 받은 폴더에는 <code>.env</code>가 없으므로 먼저 만든다.</p>
 <ol>
 <li>프로젝트 폴더(<code>scripts/</code>와 <code>notebooks/</code>가 있는 곳)에 있는 <code>.env.example</code>을 복사해 이름을 <code>.env</code>로 바꾼다.</li>
-<li><code>.env.example</code>이 없으면 메모장으로 <code>.env</code>라는 파일을 만들고 아래 내용을 붙여 넣는다. 저장할 때 인코딩은 UTF-8로 한다.</li>
+<li><code>.env.example</code>이 없으면 메모장으로 <code>.env</code>라는 파일을 만들고 아래 내용을 복사해 붙여 넣는다. 저장할 때 파일 이름을 <code>.env</code>(확장자 없음)로, 인코딩은 UTF-8로 한다.</li>
 </ol>
-<pre><code># 프로젝트 설정값. 경로·시드·표본 크기는 여기서만 바꾼다.
+<div class="cell mdcell"><div class=cellbar><span class=cellno>복사해서 쓰는 내용</span><button class=copy type=button data-code="# 프로젝트 설정값. 경로·시드·표본 크기는 여기서만 바꾼다.
+NPK_DATA_DIR=data/raw
+NPK_PROCESSED_DIR=data/processed
+NPK_REPORTS_DIR=reports
+NPK_SEED=42
+NPK_SAMPLE_N=100000
+NPK_REPO_ID=nvidia/Nemotron-Personas-Korea
+NPK_EXPECTED_ROWS=1000000
+NPK_EXPECTED_COLS=26
+NPK_FONT=Malgun Gothic
+NPK_DL_WORKERS=1
+NPK_COLOR_1=#2a78d6
+NPK_COLOR_2=#eb6834
+NPK_COLOR_SEQ_LIGHT=#cde2fb
+NPK_COLOR_SEQ_DARK=#0d366b
+NPK_COLOR_SURFACE=#fcfcfb
+NPK_COLOR_INK=#0b0b0b
+NPK_COLOR_MUTED=#898781
+NPK_COLOR_GRID=#e1e0d9">복사</button></div><pre class=code><code># 프로젝트 설정값. 경로·시드·표본 크기는 여기서만 바꾼다.
 NPK_DATA_DIR=data/raw
 NPK_PROCESSED_DIR=data/processed
 NPK_REPORTS_DIR=reports
@@ -203,7 +226,7 @@ NPK_COLOR_SURFACE=#fcfcfb
 NPK_COLOR_INK=#0b0b0b
 NPK_COLOR_MUTED=#898781
 NPK_COLOR_GRID=#e1e0d9
-</code></pre>
+</code></pre></div>
 <p>환경에 따라 고칠 값은 세 가지다.</p>
 <table>
 <thead>
@@ -408,7 +431,7 @@ pl.DataFrame({&quot;컬럼&quot;: list(schema.names()), &quot;자료형&quot;: [
 
 <span class="c1"># 셀의 마지막 줄에 표를 두면 노트북이 표로 그려 준다</span>
 <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"컬럼"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">names</span><span class="p">()),</span> <span class="s2">"자료형"</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">dtypes</span><span class="p">()]})</span>
-</code></pre></div><pre class=out>1,000,000행 x 26컬럼</pre><pre class=out>
+</code></pre></div><pre class=out>1,000,000행 x 26컬럼
 </pre><div class=tablewrap><div>
 <table class="dataframe"><thead><tr><th>컬럼</th><th>자료형</th></tr><tr><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;uuid&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;professional_persona&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;sports_persona&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;arts_persona&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;travel_persona&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;culinary_persona&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;family_persona&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;persona&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;cultural_background&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;skills_and_expertise&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;skills_and_expertise_list&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;hobbies_and_interests&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;hobbies_and_interests_list&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;career_goals_and_ambitions&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;sex&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;age&quot;</td><td>&quot;Int64&quot;</td></tr><tr><td>&quot;marital_status&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;military_status&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;family_type&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;housing_type&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;education_level&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;bachelors_field&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;occupation&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;district&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;province&quot;</td><td>&quot;String&quot;</td></tr><tr><td>&quot;country&quot;</td><td>&quot;String&quot;</td></tr></tbody></table></div></div><div class=md><p>26개 컬럼은 세 묶음이다.</p>
 <table>
