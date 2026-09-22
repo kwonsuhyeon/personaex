@@ -12,9 +12,11 @@ NVIDIA가 공개한 한국형 합성 페르소나 데이터를 공부하며 정�
 | `index.html` | 첫 페이지 |
 | `report.html` | Nemotron-Personas-Korea 이해 보고서 |
 | `us-person-pgm.html` | SDG-PGMs 미국 예제(us_person) 읽기 |
-| `quickstart.html` | 실습: 불러오기, 기초통계, 직무별로 보기 |
+| `beginner.html` | 입문 실습: 표본으로 시작하기 (pandas, 내려받기 없음) |
+| `quickstart.html` | 실습: 불러오기, 기초통계, 직무별로 보기 (polars, 전체 데이터) |
 | `python-basics.html` | 실습 노트북에 나온 Python 기초 문법 |
-| `notebooks/01_hf_quickstart.ipynb` | 실습 노트북 원본 |
+| `notebooks/00_beginner.ipynb`, `notebooks/01_hf_quickstart.ipynb` | 노트북 원본 |
+| `data/sample_random.parquet`, `data/sample_jobs.parquet` | 입문 실습용 표본. 규칙은 `data/README.md` |
 
 ## 출처와 라이선스
 
