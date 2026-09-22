@@ -5,7 +5,7 @@
   --page:#f9f9f7; --surface:#ffffff; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781; --line:#e1e0d9;
   --accent:#2a78d6; --accent-2:#eb6834; --accent-soft:#eaf2fc; --warn-bg:#fff4e5; --warn-ink:#8a4b00;
   --code-bg:#f4f3ef; --stage-1:#eaf2fc; --stage-2:#eef7ea; --stage-3:#fdf0e6; --latent:#898781;
-  --max-width:1440px; --gap:24px; --radius:10px;
+  --max-width:1440px; --nav-width:250px; --gap:24px; --radius:10px;
   --font:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
   --mono:"D2Coding","Consolas","Cascadia Mono",monospace;
 }
@@ -16,6 +16,11 @@ header.top .inner,main{max-width:var(--max-width);margin:0 auto}
 header.top h1{margin:0 0 4px;font-size:28px;letter-spacing:-.02em}
 header.top p{margin:0;color:var(--ink-2)}
 main{padding:var(--gap)}
+.layout{max-width:var(--max-width);margin:0 auto;display:grid;grid-template-columns:var(--nav-width) minmax(0,1fr);gap:var(--gap);padding:var(--gap)}
+.layout main{padding:0;max-width:none;margin:0}
+nav.toc{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:2px;font-size:14.5px}
+nav.toc a{color:var(--ink-2);text-decoration:none;padding:6px 10px;border-radius:6px;border-left:3px solid transparent}
+nav.toc a:hover{background:var(--accent-soft);color:var(--ink);border-left-color:var(--accent)}
 section{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 32px;margin-bottom:var(--gap)}
 h2{font-size:23px;margin:0 0 16px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
 h2 .no{background:var(--accent);color:#fff;border-radius:50%;width:30px;height:30px;display:inline-grid;place-items:center;font-size:15px;flex:none}
@@ -44,15 +49,29 @@ ul.todo li{margin:6px 0}
 ul.todo label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 ul.todo input{margin-top:6px;flex:none}
 ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
+@media (max-width:1000px){.layout{grid-template-columns:1fr}nav.toc{position:static;flex-direction:row;flex-wrap:wrap}}
 @media (max-width:900px){.stages{grid-template-columns:1fr}section{padding:20px 16px}}
-</style></head><body><style>.sitenav{--sn-bg:#0b0b0b;--sn-ink:#e9e8e2;--sn-on:#2a78d6;background:var(--sn-bg);padding:0 24px;font-family:'Pretendard','Malgun Gothic',system-ui,sans-serif;font-size:14.5px;line-height:1.4;position:relative;z-index:50}.sitenav .in{max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;gap:2px;align-items:center}.sitenav a{color:var(--sn-ink);text-decoration:none;padding:11px 14px;border-bottom:3px solid transparent;display:block}.sitenav a:hover{background:rgba(255,255,255,.08)}.sitenav a.on{border-bottom-color:var(--sn-on);color:#fff;font-weight:600}.sitenav a.ext{margin-right:10px;padding-right:18px;border-right:1px solid rgba(255,255,255,.2)}</style><div class="sitenav" role="navigation" aria-label="사이트 메뉴"><div class="in"><a class="ext" href="https://kwonsuhyeon.github.io/-statistics/" target="_blank" rel="noopener">1차시 ↗</a><a href="index.html">처음</a><a href="report.html">이해 보고서</a><a href="us-person-pgm.html" class=on>미국 예제 PGM</a><a href="quickstart.html">실습 노트북</a><a href="python-basics.html">Python 기초 문법</a></div></div>
+</style></head><body><style>.sitenav{--sn-bg:#0b0b0b;--sn-ink:#e9e8e2;--sn-on:#2a78d6;background:var(--sn-bg);padding:0 24px;font-family:'Pretendard','Malgun Gothic',system-ui,sans-serif;font-size:14.5px;line-height:1.4;position:relative;z-index:50}.sitenav .in{max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;gap:2px;align-items:center}.sitenav a{color:var(--sn-ink);text-decoration:none;padding:11px 14px;border-bottom:3px solid transparent;display:block}.sitenav a:hover{background:rgba(255,255,255,.08)}.sitenav a.on{border-bottom-color:var(--sn-on);color:#fff;font-weight:600}.sitenav a.ext{margin-right:10px;padding-right:18px;border-right:1px solid rgba(255,255,255,.2)}body.jp-Notebook{padding-top:0!important}body.jp-Notebook>.sitenav{margin:0 calc(-1*var(--jp-notebook-padding,20px));margin-bottom:var(--jp-notebook-padding,20px)}</style><div class="sitenav" role="navigation" aria-label="사이트 메뉴"><div class="in"><a class="ext" href="https://kwonsuhyeon.github.io/-statistics/" target="_blank" rel="noopener">1차시 ↗</a><a href="index.html">처음</a><a href="report.html">이해 보고서</a><a href="us-person-pgm.html" class=on>미국 예제 PGM</a><a href="quickstart.html">실습 노트북</a><a href="python-basics.html">Python 기초 문법</a></div></div>
 <header class=top><div class=inner>
 <h1>SDG-PGMs 미국 예제(us_person) 읽기</h1>
 <p>NVIDIA가 공개한 확률적 그래프 모델 프레임워크와 미국 인물 생성 예제의 변수 구조 정리</p>
 </div></header>
+
+<div class=layout>
+<nav class=toc>
+<a href="#read">1. 무엇을 읽었나</a>
+<a href="#framework">2. 프레임워크가 하는 일</a>
+<a href="#flow">3. 전체 흐름</a>
+<a href="#variables">4. 변수별 부모와 집계표</a>
+<a href="#design">5. 눈에 띈 설계</a>
+<a href="#korea">6. 한국판과 견주어 보기</a>
+<a href="#job-level">7. 직무 페르소나에 옮긴다면</a>
+<a href="#sources">8. 출처</a>
+</nav>
+
 <main>
 
-<section>
+<section id=read>
 <h2><span class=no>1</span>무엇을 읽었나</h2>
 <ul>
 <li>대상: <a href="https://github.com/NVIDIA-NeMo/SDG-PGMs">NVIDIA-NeMo/SDG-PGMs</a> 저장소의 <code>examples/us_person/</code>. 라이선스는 Apache 2.0이다.</li>
@@ -64,7 +83,7 @@ ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
 <div class=warn><strong>예제에 들어 있는 통계는 가짜다.</strong> 예제 README가 직접 밝혔다. 동봉된 집계표는 표의 짜임(컬럼과 범주)만 실제와 같고 수치는 난수이며, 우편번호·지명·인종 라벨도 자리만 채운 값이다. 이 예제로 뽑은 표본은 미국 인구를 반영하지 않는다. 실제 Nemotron-Personas-USA를 만든 집계표와 모델은 공개되지 않았다. 이 예제에서 배울 것은 수치가 아니라 변수 구조다.</div>
 </section>
 
-<section>
+<section id=framework>
 <h2><span class=no>2</span>프레임워크가 하는 일</h2>
 <p>SDG-PGMs는 파이썬 라이브러리 pgmpy의 베이지안 네트워크 위에 몇 가지를 얹은 틀이다. 개인 레코드가 아니라 집계표(count table, 범주 조합별 인원수를 적은 표)를 입력으로 받는다. 집계표를 조건부 확률표(CPD)로 바꾸고 그 확률표에서 부모 변수부터 차례로 값을 뽑는다.</p>
 <div class=tablewrap><table>
@@ -80,7 +99,7 @@ ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
 <p>생성기를 새로 만들려면 <code>PGMGenerator</code>를 상속해 네 가지를 채운다. 집계표를 읽는 <code>get_data()</code>, 변수와 범주를 선언하는 <code>get_variables()</code>, 간선을 선언하는 <code>get_edges()</code>, 확률표를 만드는 <code>get_cpds()</code>다.</p>
 </section>
 
-<section>
+<section id=flow>
 <h2><span class=no>3</span>미국 예제의 전체 흐름</h2>
 <p>변수 29개를 선언하고 베이지안 네트워크 3개를 차례로 돌린다. 29개 가운데 12개는 잠재 변수라 결과에서 빠지고 후처리에서 만든 컬럼이 더해져 최종 표본은 23개 컬럼이 된다.</p>
 <div class=stages>
@@ -97,7 +116,7 @@ ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
 <p>단계를 나눈 이유는 코드에서 드러난다. 직업의 부모인 <code>education_level_bachelors</code>는 학력과 전공이 둘 다 뽑힌 뒤에야 만들 수 있고, 이름의 부모인 <code>ethnic_background</code>도 인종 변수 4개가 뽑힌 뒤에 규칙으로 정해진다. 확률로 뽑는 일과 규칙으로 계산하는 일이 번갈아 나오기 때문에 네트워크를 끊고 그 사이에 후처리를 끼웠다.</p>
 </section>
 
-<section>
+<section id=variables>
 <h2><span class=no>4</span>변수별 부모와 집계표</h2>
 <p>간선 목록(<code>get_edges()</code>)과 확률표(<code>get_cpds()</code>)를 합쳐 한 표로 옮겼다. 부모가 없는 변수는 <code>zipcode</code> 하나다. 점선 테두리는 결과에서 빠지는 잠재 변수다.</p>
 <div class=tablewrap><table>
@@ -123,7 +142,7 @@ ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
 <div class=note>확률표 없이 규칙으로만 정해지는 값: <code>city</code>, <code>state</code>(우편번호 대응표), <code>county</code>(우편번호에 걸친 카운티 가운데 무작위 하나), <code>street_number</code>(평균 200인 기하분포), <code>birth_date</code>, <code>phone_number</code>(우편번호의 지역번호), <code>email_address</code>, <code>national_id</code>, <code>uuid</code>.</div>
 </section>
 
-<section>
+<section id=design>
 <h2><span class=no>5</span>코드를 읽으며 눈에 띈 설계</h2>
 <h3>직업은 학력·전공과 연령대만 본다</h3>
 <p><code>occupation</code>의 부모는 학력과 전공을 합친 변수, 그리고 직업용 연령대 둘뿐이다. 성별은 그다음 <code>detailed_occupation</code>에서야 들어오고, 지역은 직업에 전혀 영향을 주지 않는다. 직업 대분류가 같으면 어느 지역에 살든 세부 직업 분포가 같다는 뜻이다. 학력과 전공을 따로 부모로 두지 않고 <code>bachelors-공학</code>처럼 한 변수로 합쳐 놓았다. 집계표가 학력·전공 조합별로 직업 인원을 세어 둔 교차표여서 학력과 전공의 교호작용이 확률표에 그대로 들어간다.</p>
@@ -139,7 +158,7 @@ ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
 <p>README는 집계표에서 표본을 뽑으므로 원자료의 행을 복사하지 않는다고 설명한다. 다만 차분 프라이버시 같은 형식적 보장은 이 틀이 제공하지 않는다고 적었다. 집계표의 출처로는 공공 영역이거나 허용적 라이선스인 정부 통계를 권한다.</p>
 </section>
 
-<section>
+<section id=korea>
 <h2><span class=no>6</span>한국판과 견주어 보기</h2>
 <p>한국 모델의 구조는 공개되지 않았으므로 아래 비교의 한국 쪽은 공개된 컬럼과 카드의 서술에 근거한다. 구조에 관한 부분은 <strong>(추정)</strong>이다.</p>
 <div class=tablewrap><table>
@@ -156,7 +175,7 @@ ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
 <p><code>scripts/10_toy_pgm.py</code>는 성별 → 연령대 → 혼인상태 → 가구유형의 사슬 하나를 만들어 조상 샘플링을 했다. 원리는 같다. 미국 예제에서 더 볼 것은 세 가지다. 한 변수에 부모가 둘이나 셋 붙는다. 네트워크를 끊고 그 사이에 규칙 기반 후처리를 넣는다. 결과에 내보내지 않는 잠재 변수로 통계표 사이의 구간 차이를 맞춘다.</p>
 </section>
 
-<section>
+<section id=job-level>
 <h2><span class=no>7</span>수준별 직무 페르소나에 옮긴다면</h2>
 <p>여기부터는 코드에서 확인한 내용이 아니라 이 프로젝트에 적용할 때의 생각이다.</p>
 <p>미국 예제의 틀에서 SQF/NCS 수준은 3단계의 직업 뒤에 오는 변수로 넣는 것이 자연스럽다. 부모 후보는 직업, 학력, 직업용 연령대다. 연령대는 경력 연수를 대신하는 변수가 된다. 걸림돌은 집계표다. 직업×학력×연령대 조합별로 수준 분포를 센 공식 통계가 있어야 확률표를 만들 수 있다. 그런 표가 없으면 한국판 카드처럼 요인별로 독립을 가정하거나, 수준 정의 문서의 학력·경력 요건을 규칙으로 옮겨 후처리에서 정해야 한다. 규칙으로 정하면 확률 모형이 아니라 결정 규칙이 되므로 같은 직업·학력·연령대인 사람은 모두 같은 수준을 받는다.</p>
@@ -168,7 +187,7 @@ ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
 </ul>
 </section>
 
-<section>
+<section id=sources>
 <h2><span class=no>8</span>출처</h2>
 <ul>
 <li>NVIDIA-NeMo, <a href="https://github.com/NVIDIA-NeMo/SDG-PGMs">SDG-PGMs 저장소</a> (Apache 2.0, 커밋 c34fd1a)</li>
@@ -179,6 +198,7 @@ ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
 </section>
 
 </main>
+</div>
 <script>
 (function(){
   var PREFIX="us_person_pgm.todo.";
