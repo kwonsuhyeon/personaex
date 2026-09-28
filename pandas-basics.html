@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang=ko><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>입문 실습에 나온 pandas 기초 문법</title><style>
+:root{
+  --page:#f9f9f7; --surface:#ffffff; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781; --line:#e1e0d9;
+  --accent:#2a78d6; --accent-2:#eb6834; --accent-soft:#eaf2fc; --warn-bg:#fff4e5; --warn-ink:#8a4b00;
+  --code-bg:#f4f3ef; --code-comment:#6b7a5e;
+  --totop-bg:#0b0b0b; --totop-ink:#e9e8e2; --totop-show-px:600;
+  --max-width:1440px; --nav-width:250px; --gap:24px; --radius:10px;
+  --font:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+  --mono:"D2Coding","Consolas","Cascadia Mono",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.7;word-break:keep-all}
+header.top{background:var(--surface);border-bottom:1px solid var(--line);padding:28px var(--gap)}
+header.top .inner,.layout{max-width:var(--max-width);margin:0 auto}
+header.top h1{margin:0 0 4px;font-size:28px;letter-spacing:-.02em}
+header.top p{margin:0;color:var(--ink-2)}
+.tabs{display:flex;gap:6px;margin-top:16px;flex-wrap:wrap}
+.tabs a{padding:7px 14px;border:1px solid var(--line);border-radius:8px 8px 0 0;text-decoration:none;color:var(--ink-2);background:var(--page);font-size:14.5px}
+.tabs a.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.tabs a:hover:not(.on){background:var(--accent-soft);color:var(--ink)}
+.layout{display:grid;grid-template-columns:var(--nav-width) minmax(0,1fr);gap:var(--gap);padding:var(--gap)}
+nav.toc{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:2px;font-size:14.5px}
+nav.toc a{color:var(--ink-2);text-decoration:none;padding:6px 10px;border-radius:6px;border-left:3px solid transparent}
+nav.toc a:hover{background:var(--accent-soft);color:var(--ink);border-left-color:var(--accent)}
+nav.toc .grp{margin:12px 0 2px 10px;color:var(--muted);font-size:12.5px}
+section{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 32px;margin-bottom:var(--gap)}
+h2{font-size:23px;margin:0 0 14px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+h2 .no{background:var(--accent);color:#fff;border-radius:50%;width:30px;height:30px;display:inline-grid;place-items:center;font-size:15px;flex:none}
+h3{font-size:17.5px;margin:26px 0 8px}
+.where{color:var(--muted);font-size:13.5px;font-weight:400;margin-left:8px}
+.note{color:var(--ink-2);font-size:14.5px;border-left:3px solid var(--line);padding-left:12px;margin:8px 0 16px}
+.warn{background:var(--warn-bg);color:var(--warn-ink);padding:12px 16px;border-radius:8px;font-size:15px;margin:14px 0}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap);align-items:start}
+.tablewrap{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle;text-align:left}
+th{background:var(--code-bg);font-weight:600;white-space:nowrap}
+tbody tr:hover{background:#fafaf8}
+code{font-family:var(--mono);font-size:.9em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+pre{background:var(--code-bg);border-radius:8px;padding:14px 16px;overflow-x:auto;font-size:13.5px;line-height:1.6;margin:8px 0 12px;border-left:3px solid var(--accent)}
+pre code{background:none;padding:0;font-size:1em}
+pre .c{color:var(--code-comment)}
+pre.out{border-left-color:var(--muted);background:var(--surface);border:1px solid var(--line)}
+ul.todo{list-style:none;padding-left:0}
+ul.todo li{margin:6px 0}
+ul.todo label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+ul.todo input{margin-top:6px;flex:none}
+ul.todo input:checked + span{color:var(--muted);text-decoration:line-through}
+.totop{position:fixed;right:24px;bottom:24px;z-index:60;width:46px;height:46px;border-radius:50%;border:0;background:var(--totop-bg);color:var(--totop-ink);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;font-family:system-ui,sans-serif}
+.totop.show{opacity:1;visibility:visible;transform:none}
+.totop:hover{background:var(--accent)}
+@media (max-width:600px){.totop{right:14px;bottom:14px;width:42px;height:42px}}
+@media (max-width:1000px){.layout{grid-template-columns:1fr}nav.toc{position:static;flex-direction:row;flex-wrap:wrap}nav.toc .grp{display:none}.two{grid-template-columns:1fr}section{padding:20px 16px}}
+</style></head><body><style>.sitenav{--sn-bg:#0b0b0b;--sn-ink:#e9e8e2;--sn-on:#2a78d6;background:var(--sn-bg);padding:0 24px;font-family:'Pretendard','Malgun Gothic',system-ui,sans-serif;font-size:14.5px;line-height:1.4;position:relative;z-index:50}.sitenav .in{max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;gap:2px;align-items:center}.sitenav a{color:var(--sn-ink);text-decoration:none;padding:11px 14px;border-bottom:3px solid transparent;display:block}.sitenav a:hover{background:rgba(255,255,255,.08)}.sitenav a.on{border-bottom-color:var(--sn-on);color:#fff;font-weight:600}.sitenav a.ext{margin-right:10px;padding-right:18px;border-right:1px solid rgba(255,255,255,.2)}body.jp-Notebook{padding-top:0!important}body.jp-Notebook>.sitenav{margin:0 calc(-1*var(--jp-notebook-padding,20px));margin-bottom:var(--jp-notebook-padding,20px)}</style><div class="sitenav" role="navigation" aria-label="사이트 메뉴"><div class="in"><a class="ext" href="https://kwonsuhyeon.github.io/-statistics/" target="_blank" rel="noopener">1차시 ↗</a><a href="index.html">처음</a><a href="report.html">이해 보고서</a><a href="us-person-pgm.html">미국 예제 PGM</a><a href="beginner.html">입문 실습</a><a href="pandas-basics.html" class=on>pandas 기초 문법</a><a href="quickstart.html">실습 노트북</a><a href="python-basics.html">Python 기초 문법</a></div></div>
+<header class=top><div class=inner>
+<h1>입문 실습에 나온 pandas 기초 문법</h1>
+<p><code>notebooks/00_beginner.ipynb</code>의 셀을 위에서부터 따라가며 나온 문법을 실제 코드로 설명한다. 숫자는 모두 표본 파일로 직접 계산한 값이다.</p>
+</div></header>
+
+<div class=layout>
+<nav class=toc>
+<span class=grp>준비</span>
+<a href="#setup">1. 설정 바꾸기</a>
+<a href="#open">2. 데이터 열기</a>
+<span class=grp>표 다루기</span>
+<a href="#cols">3. 컬럼 고르기</a>
+<a href="#na">4. 결측치 세기</a>
+<a href="#filter">5. 행 거르기</a>
+<a href="#summary">6. 요약 통계</a>
+<a href="#plot">7. 그림 그리기</a>
+<a href="#crosstab">8. 교차표</a>
+<a href="#groupby">9. 새 컬럼과 groupby</a>
+<span class=grp>텍스트</span>
+<a href="#text">10. 서술문 읽기</a>
+<a href="#strcount">11. 글자 수와 낱말 포함 비율</a>
+<a href="#words">12. 기술 목록의 낱말 세기</a>
+<span class=grp>마무리</span>
+<a href="#check">13. 확인 목록</a>
+</nav>
+
+<main>
+
+<!-- 1 -->
+<section id=setup>
+<h2><span class=no>1</span>설정 바꾸기<span class=where>0. 준비</span></h2>
+<pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams["font.family"] = "Malgun Gothic"
+plt.rcParams["axes.unicode_minus"] = False
+pd.set_option("display.max_columns", 30)</code></pre>
+<p>세 줄 모두 라이브러리가 들고 있는 전역 설정값 하나를 바꾼다. matplotlib은 설정을 <code>rcParams</code>에, pandas는 <code>pd.options</code>에 모아 둔다.</p>
+
+<h3>plt.rcParams</h3>
+<p>matplotlib의 기본 설정이 담긴 딕셔너리 모양의 객체다. import할 때 <code>matplotlibrc</code> 파일을 읽어 채운다. 그림을 그릴 때 글꼴이나 선 굵기를 따로 정하지 않으면 여기서 기본값을 가져온다. 키는 <code>"그룹.항목"</code> 모양이고 없는 키나 틀린 형식의 값을 넣으면 바로 에러가 난다. 항목은 300개가 넘는다.</p>
+<div class=tablewrap><table>
+<thead><tr><th>설정</th><th>기본값</th><th>바꾼 이유</th></tr></thead>
+<tbody>
+<tr><td><code>font.family</code></td><td><code>sans-serif</code> (실제로는 DejaVu Sans)</td><td>DejaVu Sans에는 한글 글리프가 없어 한글이 □□로 나온다. Windows 기본 글꼴인 맑은 고딕으로 바꾼다. macOS는 <code>AppleGothic</code></td></tr>
+<tr><td><code>axes.unicode_minus</code></td><td><code>True</code></td><td>음수 눈금에 수학 기호 − (U+2212)를 쓰는데, 한글 글꼴에 이 글리프가 없으면 깨진다. <code>False</code>면 키보드 하이픈 - (U+002D)을 쓴다</td></tr>
+</tbody></table></div>
+
+<h3>pd.set_option</h3>
+<p><code>display.*</code> 옵션은 표를 화면에 보여 주는 방식만 바꾼다. 데이터는 그대로다.</p>
+<div class=tablewrap><table>
+<thead><tr><th>옵션</th><th>기본값</th><th>뜻</th></tr></thead>
+<tbody>
+<tr><td><code>display.max_columns</code></td><td>20</td><td>보여 줄 최대 컬럼 수. 넘으면 가운데를 <code>...</code>로 줄인다. <code>None</code>이면 제한 없음</td></tr>
+<tr><td><code>display.max_rows</code></td><td>60</td><td>보여 줄 최대 행 수</td></tr>
+<tr><td><code>display.max_colwidth</code></td><td>50</td><td>셀 하나에 보여 줄 최대 글자 수. 서술문처럼 긴 글을 볼 때 늘린다</td></tr>
+</tbody></table></div>
+<p class=note>설정은 지금 켜진 커널에만 적용된다. 커널을 재시작하면 기본값으로 돌아가므로 노트북 맨 위에서 매번 실행한다. matplotlib 설정은 그 뒤에 그리는 그림부터 적용된다.</p>
+</section>
+
+<!-- 2 -->
+<section id=open>
+<h2><span class=no>2</span>데이터 열기<span class=where>1. 데이터 열기</span></h2>
+<pre><code>BASE_URL = "https://kwonsuhyeon.github.io/personaex/data/"
+
+df = pd.read_parquet(BASE_URL + "sample_random.parquet")
+df.shape     <span class=c># (10000, 26)</span></code></pre>
+
+<h3>인터넷 주소로 파일을 읽는 원리</h3>
+<p>저장소에 GitHub Pages를 켜 두면 GitHub이 지정한 폴더의 파일을 웹 서버처럼 그대로 내보낸다. 주소는 <code>https://&lt;사용자명&gt;.github.io/&lt;저장소명&gt;/&lt;경로&gt;</code> 규칙을 따른다. 이 프로젝트는 <code>docs/</code> 폴더를 공개하므로 로컬의 <code>docs/data/sample_random.parquet</code>가 위 주소로 나간다.</p>
+<p><code>pd.read_parquet</code>는 첫 인자가 <code>http://</code>나 <code>https://</code>로 시작하면 파일 전체(약 10MB)를 메모리로 내려받은 뒤 읽는다. 디스크에는 저장하지 않는다. <code>read_csv</code>, <code>read_excel</code>도 같은 방식으로 URL을 받는다.</p>
+<p><code>BASE_URL</code> 끝의 <code>/</code>가 빠지면 주소가 <code>.../datasample_random.parquet</code>이 되어 404 에러가 난다.</p>
+
+<h3>한 번 받아서 로컬에 두기</h3>
+<pre><code>df.to_parquet("sample_random.parquet")          <span class=c># 노트북과 같은 폴더에 저장</span>
+df = pd.read_parquet("sample_random.parquet")   <span class=c># 이후엔 로컬에서 읽는다</span></code></pre>
+<p>URL로 읽으면 실행할 때마다 다시 내려받고, 인터넷이 끊기면 에러가 난다. 여러 번 쓸 파일은 로컬에 저장해 둔다.</p>
+
+<h3>parquet 형식</h3>
+<div class=tablewrap><table>
+<thead><tr><th></th><th>CSV</th><th>Parquet</th></tr></thead>
+<tbody>
+<tr><td>저장 방식</td><td>행 단위 텍스트</td><td>컬럼 단위 이진 파일</td></tr>
+<tr><td>자료형</td><td>저장하지 않아 읽을 때 추측</td><td>저장되어 그대로 복원</td></tr>
+<tr><td>크기</td><td>크다</td><td>압축되어 작다</td></tr>
+<tr><td>메모장으로 열기</td><td>된다</td><td>안 된다</td></tr>
+</tbody></table></div>
+<p class=note>pandas만으로는 parquet을 못 읽는다. <code>pyarrow</code>가 없으면 <code>ImportError: Unable to find a usable engine</code>이 뜬다.</p>
+
+<h3>df.shape는 괄호 없이</h3>
+<p><code>shape</code>는 메서드가 아니라 속성이다. <code>(행 수, 컬럼 수)</code> 튜플을 돌려준다. <code>df.shape()</code>로 쓰면 <code>'tuple' object is not callable</code> 에러가 난다. Jupyter는 셀의 마지막 줄 값을 자동으로 출력하므로 <code>print()</code> 없이 결과가 보인다.</p>
+</section>
+
+<!-- 3 -->
+<section id=cols>
+<h2><span class=no>3</span>컬럼 고르기<span class=where>2. 컬럼과 자료형</span></h2>
+<pre><code>df.dtypes      <span class=c># 컬럼마다 자료형. object는 문자열, int64는 정수</span>
+df.head(3)     <span class=c># 처음 3행</span></code></pre>
+
+<h3>여러 컬럼을 한 번에 고르기</h3>
+<pre><code>demo_cols = [
+    "sex",              <span class=c># 성별. 남자 / 여자</span>
+    "age",              <span class=c># 나이. 19~99세 정수</span>
+    "marital_status",   <span class=c># 혼인 상태. 미혼 / 배우자있음 / 사별 / 이혼</span>
+    "education_level",  <span class=c># 최종 학력. 무학부터 대학원까지 7단계</span>
+    "bachelors_field",  <span class=c># 전공 계열 (11가지). 4년제 대학교·대학원만 값이 있고 나머지는 '해당없음'</span>
+    "occupation",       <span class=c># 직업명. 2,000가지가 넘는다. 일이 없으면 '무직'</span>
+    "province",         <span class=c># 사는 시도. 17개 (서울, 경기, 충청남 ...)</span>
+]
+df[demo_cols].head(5)</code></pre>
+<div class=two>
+<div>
+<p>대괄호 안에 넣는 것에 따라 결과가 달라진다.</p>
+<div class=tablewrap><table>
+<thead><tr><th>쓴 것</th><th>결과</th></tr></thead>
+<tbody>
+<tr><td><code>df["age"]</code></td><td>컬럼 하나. Series</td></tr>
+<tr><td><code>df[["sex", "age"]]</code></td><td>컬럼 여러 개. DataFrame</td></tr>
+<tr><td><code>df[demo_cols]</code></td><td>리스트 변수를 넣은 것. 위와 같다</td></tr>
+</tbody></table></div>
+</div>
+<div>
+<p>리스트는 대괄호가 닫힐 때까지 줄바꿈을 무시한다. 그래서 한 줄에 하나씩 쓰고 옆에 주석을 달아도 한 줄로 쓴 것과 똑같이 동작한다. 마지막 항목 뒤의 쉼표도 문제없다.</p>
+</div>
+</div>
+<p class=note><code>province</code> 값은 "도"가 빠진 형태(<code>충청남</code>, <code>경상북</code>)와 줄임말(<code>전북</code>)이 섞여 있다. 시도 이름으로 거를 때는 이 표기를 그대로 쓴다.</p>
+</section>
+
+<!-- 4 -->
+<section id=na>
+<h2><span class=no>4</span>결측치 세기<span class=where>3-1. 빈 값이 있는가</span></h2>
+<pre><code>df.isna().sum()    <span class=c># 컬럼별 결측치 수</span></code></pre>
+<div class=two>
+<div>
+<h3>1단계 df.isna()</h3>
+<p><code>df</code>와 모양이 같은 표를 새로 만든다. 칸이 비어 있으면 <code>True</code>, 값이 있으면 <code>False</code>다.</p>
+<pre class=out><code>   sex    age            sex    age
+0  남자    74      →   0  False  False
+1  NaN    23          1  True   False
+2  여자    NaN         2  False  True</code></pre>
+</div>
+<div>
+<h3>2단계 .sum()</h3>
+<p>파이썬은 <code>True</code>를 1, <code>False</code>를 0으로 계산한다. 컬럼마다 위에서 아래로 더하면(<code>axis=0</code>, 기본값) 합이 곧 결측치 수다.</p>
+<pre><code>df.isna().sum().sum()     <span class=c># 표 전체의 결측치 수</span>
+df.isna().mean() * 100    <span class=c># 컬럼별 결측 비율(%)</span>
+df.isna().sum(axis=1)     <span class=c># 행마다 빈 칸 수</span></code></pre>
+</div>
+</div>
+
+<h3>True/False의 평균은 비율</h3>
+<p>이 문서에서 가장 자주 쓰는 성질이다. <code>True, False, True, True</code>의 평균은 (1+0+1+1)/4 = 0.75, 곧 <code>True</code>의 비율 75%다. 결측 비율, 여자 비율, 낱말 포함 비율이 모두 이 원리로 나온다.</p>
+
+<div class=warn><strong>결측치로 세지 않는 값.</strong> <code>isna()</code>가 빈 값으로 보는 것은 <code>NaN</code>, <code>None</code>, <code>NaT</code>, <code>pd.NA</code>뿐이다. 빈 문자열 <code>""</code>, <code>"해당없음"</code>, <code>"무직"</code>은 글자이므로 세지 않는다. 이 데이터는 <code>isna().sum()</code>이 모두 0이지만 <code>bachelors_field</code>가 <code>"해당없음"</code>인 사람이 6,611명(66%)이다.</div>
+<pre><code>(df["bachelors_field"] == "해당없음").sum()    <span class=c># 6611</span></code></pre>
+</section>
+
+<!-- 5 -->
+<section id=filter>
+<h2><span class=no>5</span>행 거르기<span class=where>3-2, 3-5, 4-1</span></h2>
+
+<h3>불리언 인덱싱</h3>
+<p>대괄호 안에 True/False Series를 넣으면 <code>True</code>인 행만 남는다. pandas에서 행을 거르는 기본 방법이다.</p>
+<pre><code>df["sex"] == "남자"             <span class=c># ① 행마다 True/False. 1만 개</span>
+df[df["sex"] == "남자"]         <span class=c># ② True인 행(남자)만 남긴 DataFrame</span>
+df[df["sex"] == "남자"]["age"]  <span class=c># ③ 그중 age 컬럼만. Series</span>
+
+df.loc[df["sex"] == "남자", "age"]   <span class=c># ③과 같다. 행 조건, 컬럼을 쉼표로 나눠 한 번에</span></code></pre>
+<p class=note>읽기만 할 때는 두 방식이 같다. 거른 결과에 값을 넣을 때는 <code>.loc</code>을 써야 경고가 나지 않는다.</p>
+
+<h3>조건 묶기</h3>
+<pre><code>employed = df[(df["occupation"] != "무직") &amp; ~df["occupation"].str.contains("현재 구직중")]
+len(employed), len(df)    <span class=c># (6084, 10000)</span></code></pre>
+<div class=two>
+<div>
+<div class=tablewrap><table>
+<thead><tr><th>뜻</th><th>파이썬 기본</th><th>pandas Series</th></tr></thead>
+<tbody>
+<tr><td>그리고</td><td><code>and</code></td><td><code>&amp;</code></td></tr>
+<tr><td>또는</td><td><code>or</code></td><td><code>|</code></td></tr>
+<tr><td>아니다</td><td><code>not</code></td><td><code>~</code></td></tr>
+</tbody></table></div>
+</div>
+<div>
+<p><code>and</code>, <code>or</code>, <code>not</code>은 값 하나의 참·거짓만 따진다. Series에 쓰면 <code>The truth value of a Series is ambiguous</code> 에러가 난다. <code>&amp;</code>, <code>|</code>, <code>~</code>는 칸마다 따로 계산해 True/False Series를 돌려준다.</p>
+</div>
+</div>
+<p><strong>괄호가 필요한 이유.</strong> <code>&amp;</code>가 <code>!=</code>, <code>==</code>보다 먼저 계산된다. 괄호 없이 쓰면 파이썬은 <code>df["occupation"] != ("무직" &amp; ...)</code>로 읽어 에러를 낸다. 비교식은 항상 괄호로 감싼다. <code>~df[...].str.contains(...)</code>에는 괄호가 없어도 되는데, <code>.</code>으로 잇는 메서드 호출이 <code>~</code>보다 먼저 계산되기 때문이다.</p>
+
+<h3>같지 않다 vs 들어 있지 않다</h3>
+<div class=tablewrap><table>
+<thead><tr><th>코드</th><th>True가 되는 경우</th><th>쓰는 곳</th></tr></thead>
+<tbody>
+<tr><td><code>s != "무직"</code></td><td>값 전체가 정확히 "무직"이 아닐 때</td><td>값이 딱 정해진 경우</td></tr>
+<tr><td><code>s.str.contains("현재 구직중")</code></td><td>글자가 어딘가에 들어 있을 때</td><td>"전직 출납 창구 사무원, 현재 구직중"처럼 앞부분이 사람마다 다를 때</td></tr>
+<tr><td><code>~s.str.contains("현재 구직중")</code></td><td>글자가 들어 있지 않을 때</td><td><code>str.contains</code>에는 반대 버전이 없어서 <code>~</code>로 뒤집는다</td></tr>
+<tr><td><code>s.isin(["A", "B", "C"])</code></td><td>목록 중 하나와 같을 때</td><td><code>(s == "A") | (s == "B") | (s == "C")</code>를 줄여 쓴 것</td></tr>
+</tbody></table></div>
+
+<h3>여러 값을 나란히 출력</h3>
+<p><code>len()</code>은 행 수다. <code>len(employed), len(df)</code>처럼 쉼표로 나열하면 파이썬이 튜플로 묶어 <code>(6084, 10000)</code>으로 한 번에 보여 준다.</p>
+
+<h3>조건을 변수로 빼 두기</h3>
+<pre><code>MY_DEPT = "컴퓨터공학"
+MY_JOB = "소프트웨어 개발"
+mine = jobs[(jobs["dept"] == MY_DEPT) &amp; (jobs["job"] == MY_JOB)]</code></pre>
+<p>바꿀 값을 셀 위쪽 변수에 모아 두면, 두 값만 고쳐 아래 셀을 다시 실행해 다른 학과·직무를 볼 수 있다. 이름을 대문자로 쓴 것은 "사용자가 바꾸는 설정값"이라는 표시일 뿐 문법상 의미는 없다.</p>
+</section>
+
+<!-- 6 -->
+<section id=summary>
+<h2><span class=no>6</span>요약 통계<span class=where>3-2, 3-3, 3-5</span></h2>
+<div class=tablewrap><table>
+<thead><tr><th>코드</th><th>결과</th></tr></thead>
+<tbody>
+<tr><td><code>df["age"].describe()</code></td><td>개수, 평균, 표준편차, 최솟값, 사분위수(25·50·75%), 최댓값. 이 표본은 최솟값 19, 중앙값 51, 최댓값 99</td></tr>
+<tr><td><code>df["sex"].value_counts()</code></td><td>값마다 개수. 많은 순으로 정렬</td></tr>
+<tr><td><code>df["sex"].value_counts(normalize=True)</code></td><td>개수 대신 비율(0~1). 100을 곱하면 퍼센트</td></tr>
+<tr><td><code>df["province"].value_counts().head(10)</code></td><td>많은 순 10개</td></tr>
+<tr><td><code>jobs.groupby("dept")["job"].unique()</code></td><td>학과마다 어떤 직무 값이 있는지 목록으로</td></tr>
+<tr><td><code>.round(2)</code></td><td>소수 둘째 자리까지 반올림</td></tr>
+</tbody></table></div>
+<p class=note>출력 아래에 <code>Name: proportion</code>이나 <code>Name: count</code>가 붙는 것은 pandas 2.0부터 결과 Series에 이름을 붙이기 때문이다. 값에는 영향이 없다.</p>
+</section>
+
+<!-- 7 -->
+<section id=plot>
+<h2><span class=no>7</span>그림 그리기<span class=where>3-2, 3-3, 4-4</span></h2>
+
+<h3>히스토그램 두 개 겹치기</h3>
+<pre><code>df[df["sex"] == "남자"]["age"].plot.hist(bins=range(15, 105, 5), histtype="step", linewidth=2, label="남자")
+df[df["sex"] == "여자"]["age"].plot.hist(bins=range(15, 105, 5), histtype="step", linewidth=2, label="여자")
+plt.legend()
+plt.xlabel("나이")
+plt.show()</code></pre>
+<p>Series의 <code>.plot</code>은 내부에서 matplotlib을 부른다. 괄호 안 인자도 대부분 matplotlib의 것이다.</p>
+<div class=tablewrap><table>
+<thead><tr><th>인자·함수</th><th>뜻</th></tr></thead>
+<tbody>
+<tr><td><code>bins=range(15, 105, 5)</code></td><td>막대 경계. <code>range</code>는 끝값을 빼므로 15, 20, …, 100의 18개 경계, 막대 17개. 각 구간은 왼쪽 포함·오른쪽 제외이고 마지막 95~100만 100을 포함한다. 숫자 하나(<code>bins=17</code>)를 주면 최솟값~최댓값을 등분해 경계가 19.0, 23.7…처럼 어중간해진다</td></tr>
+<tr><td><code>histtype="step"</code></td><td>막대 속을 칠하지 않고 윤곽선만. 겹쳐 그려도 뒤의 막대가 앞을 가리지 않는다. 기본값은 <code>"bar"</code>, 윤곽을 따라 채우려면 <code>"stepfilled"</code></td></tr>
+<tr><td><code>linewidth=2</code></td><td>선 두께. 기본값 1</td></tr>
+<tr><td><code>label="남자"</code></td><td>범례에 쓸 이름표. 이것만으로는 화면에 나오지 않는다</td></tr>
+<tr><td><code>plt.legend()</code></td><td>범례(legend)를 그린다. 어느 색 선이 어느 집단인지 알려 주는 작은 상자로, 앞에서 붙인 <code>label</code>을 모아 만든다</td></tr>
+<tr><td><code>plt.xlabel("나이")</code></td><td>x축 이름. 1절의 글꼴 설정 덕분에 한글이 나온다</td></tr>
+<tr><td><code>plt.show()</code></td><td>그림을 내보내고 "지금 그리는 그림"을 비운다. 없으면 그림 위에 <code>&lt;matplotlib.legend.Legend at 0x…&gt;</code> 같은 글자가 함께 찍힌다</td></tr>
+</tbody></table></div>
+<p><strong>두 줄이 한 그림에 겹치는 이유.</strong> matplotlib은 지금 그리고 있는 축(current axes)을 하나 기억해 두고 <code>plt.show()</code>가 나오기 전까지 같은 축에 계속 덧그린다. 색을 지정하지 않아도 기본 색 순서(파랑 → 주황 → 초록 …)를 따라 다음 색이 쓰인다.</p>
+<div class=warn>최솟값이 19세라 15~20 막대에는 19세 한 살만 들어간다. 다른 막대는 다섯 살을 담으므로 이 막대만 유난히 낮다. 19세가 적어서가 아니라 구간 폭이 달라서다.</div>
+<p>y축은 사람 수다. 두 집단 크기가 많이 다르면 <code>density=True</code>를 넣어 막대 면적 합이 1이 되게 맞춘 뒤 모양을 비교한다.</p>
+
+<h3>가로 막대그림</h3>
+<pre><code>order = ["무학", "초등학교", "중학교", "고등학교", "2~3년제 전문대학", "4년제 대학교", "대학원"]
+(df["education_level"].value_counts(normalize=True) * 100).reindex(order).plot.barh(color="#2a78d6")
+plt.xlabel("비율 (%)")
+plt.ylabel("학력")
+plt.show()</code></pre>
+<div class=tablewrap><table>
+<thead><tr><th>부분</th><th>뜻</th></tr></thead>
+<tbody>
+<tr><td>바깥 괄호 <code>( ... * 100)</code></td><td><code>.</code>이 <code>*</code>보다 먼저 계산된다. 괄호가 없으면 <code>100</code>에 <code>.plot</code>을 붙이려다 에러가 난다</td></tr>
+<tr><td><code>.reindex(order)</code></td><td>많은 순 대신 <code>order</code>에 적은 순서로 다시 줄 세운다. 이름이 데이터 값과 한 글자라도 다르면 에러 없이 그 항목만 <code>NaN</code>이 되어 막대가 사라진다</td></tr>
+<tr><td><code>.plot.barh()</code></td><td>가로 막대(bar horizontal). 인덱스가 세로축 이름, 값이 막대 길이. 긴 한글 이름이 한 줄로 들어간다. 세로 막대는 <code>.plot.bar()</code></td></tr>
+<tr><td><code>color="#2a78d6"</code></td><td>16진수 색 코드. 두 자리씩 빨강 2a(42)·초록 78(120)·파랑 d6(214). 파랑이 가장 세서 파란색</td></tr>
+<tr><td><code>plt.xlabel</code> / <code>plt.ylabel</code></td><td>가로 막대라 x축이 비율이다. y축 이름을 안 쓰면 인덱스 이름 <code>education_level</code>이 자동으로 붙는다</td></tr>
+</tbody></table></div>
+<p class=note><code>barh</code>는 첫 항목을 맨 아래에 그린다. <code>value_counts()</code> 결과를 그대로 그리면 가장 많은 값이 맨 아래로 간다. 많은 것을 위로 올리려면 <code>.sort_values()</code>로 작은 순 정렬한 뒤 그린다. 학력처럼 높낮이가 있는 변수는 <code>reindex</code>로 순서를 정해 주는 편이 읽기 쉽다.</p>
+
+<h3>상자그림</h3>
+<pre><code>jobs.boxplot(column="age", by="dept", grid=False)
+plt.title("")
+plt.suptitle("")
+plt.ylabel("나이")
+plt.show()</code></pre>
+<div class=tablewrap><table>
+<thead><tr><th>부분</th><th>뜻</th></tr></thead>
+<tbody>
+<tr><td><code>column="age", by="dept"</code></td><td><code>dept</code> 값마다 <code>age</code>의 상자를 하나씩 그린다</td></tr>
+<tr><td><code>grid=False</code></td><td>배경 격자를 끈다</td></tr>
+<tr><td><code>plt.title("")</code></td><td>pandas가 자동으로 붙인 축 제목 <code>age</code>를 지운다</td></tr>
+<tr><td><code>plt.suptitle("")</code></td><td>그림 맨 위의 <code>Boxplot grouped by dept</code>를 지운다</td></tr>
+</tbody></table></div>
+<p>상자 가운데 선이 중앙값, 상자의 아래·위 끝이 1사분위수와 3사분위수다. 상자 밖으로 뻗은 선(수염)은 상자 길이의 1.5배 안에 있는 가장 먼 값까지 닿고 그 밖의 점은 따로 찍힌다.</p>
+</section>
+
+<!-- 8 -->
+<section id=crosstab>
+<h2><span class=no>8</span>교차표<span class=where>3-4, 4-3</span></h2>
+<pre><code>pd.crosstab(df["sex"], df["education_level"], normalize="index").round(3) * 100</code></pre>
+<p><code>pd.crosstab(행, 열)</code>은 두 범주형 변수의 조합마다 사람 수를 센 표를 만든다. <code>normalize</code>는 사람 수 대신 비율을 넣으라는 옵션이고 값에 따라 무엇을 기준으로 나눌지가 달라진다. pandas에서 <code>index</code>는 행 쪽을 가리킨다.</p>
+<div class=tablewrap><table>
+<thead><tr><th>normalize</th><th>나누는 기준</th><th>합이 1인 곳</th><th>남자·4년제 대학교 칸</th><th>읽는 법</th></tr></thead>
+<tbody>
+<tr><td>없음</td><td>나누지 않음</td><td>-</td><td>1585</td><td>남자이면서 4년제인 사람이 1,585명</td></tr>
+<tr><td><code>"index"</code></td><td>행 합계</td><td>행</td><td>0.316</td><td>남자 중 31.6%가 4년제</td></tr>
+<tr><td><code>"columns"</code></td><td>열 합계</td><td>열</td><td>0.561</td><td>4년제 졸업자 중 56.1%가 남자</td></tr>
+<tr><td><code>"all"</code> 또는 <code>True</code></td><td>전체 합계</td><td>표 전체</td><td>0.158</td><td>1만 명 중 15.8%가 4년제 남자</td></tr>
+</tbody></table></div>
+<p>어느 쪽을 고를지는 기준 집단으로 정한다. 남자와 여자의 학력 분포를 비교하려면 <code>"index"</code>(행 = 성별), 학력별 성비를 보려면 <code>"columns"</code>다. 비율로 바꾸면 두 집단의 크기가 달라도 공정하게 비교할 수 있다. 뒤의 <code>.round(3) * 100</code>은 소수 셋째 자리에서 반올림한 뒤 퍼센트로 바꾼다.</p>
+</section>
+
+<!-- 9 -->
+<section id=groupby>
+<h2><span class=no>9</span>새 컬럼과 groupby<span class=where>4-2</span></h2>
+<pre><code>jobs["여자"] = jobs["sex"] == "여자"
+jobs["전문대이상"] = jobs["education_level"].isin(["2~3년제 전문대학", "4년제 대학교", "대학원"])
+jobs.groupby("dept").agg(인원=("age", "size"), 나이중앙값=("age", "median"),
+                         여자비율=("여자", "mean"), 전문대이상비율=("전문대이상", "mean")).round(2)</code></pre>
+
+<h3>새 컬럼 만들기</h3>
+<p>대괄호 안에 없는 컬럼 이름을 쓰고 <code>=</code>로 값을 넣으면 표 오른쪽 끝에 컬럼이 새로 생긴다. 이미 있는 이름이면 덮어쓴다. 한글 이름도 된다. 오른쪽부터 읽으면 된다. <code>jobs["sex"] == "여자"</code>로 True/False를 만들고 그 결과를 <code>여자</code> 컬럼에 저장한다.</p>
+<p>True/False로 만든 까닭은 4절의 성질 때문이다. 평균을 내면 곧 비율이 된다.</p>
+<div class=warn>새 컬럼은 메모리의 <code>jobs</code>에만 생긴다. parquet 파일은 그대로다. 커널을 재시작하면 사라지고, 이 셀을 건너뛰면 <code>여자</code>를 쓰는 뒤 셀에서 <code>KeyError</code>가 난다.</div>
+
+<h3>groupby와 agg</h3>
+<p><code>groupby("dept")</code>는 학과 값이 같은 행끼리 묶기만 한다. 뒤에 계산을 붙여야 결과가 나온다. <code>.agg()</code>는 묶음마다 여러 계산을 한꺼번에 한다. 괄호 안은 <code>결과이름=("어느 컬럼으로", "무슨 계산")</code> 형식이며 pandas에서는 이를 named aggregation이라고 부른다.</p>
+<div class=tablewrap><table>
+<thead><tr><th>쓴 것</th><th>뜻</th></tr></thead>
+<tbody>
+<tr><td><code>인원=("age", "size")</code></td><td>행 수. <code>size</code>는 어느 컬럼을 넣어도 같아서 형식상 <code>age</code>를 적었다. 비슷한 <code>count</code>는 NaN을 빼고 센다</td></tr>
+<tr><td><code>나이중앙값=("age", "median")</code></td><td>나이의 중앙값</td></tr>
+<tr><td><code>여자비율=("여자", "mean")</code></td><td>True/False의 평균이므로 여자 비율</td></tr>
+<tr><td><code>전문대이상비율=("전문대이상", "mean")</code></td><td>전문대 이상 비율</td></tr>
+</tbody></table></div>
+<pre class=out><code>           인원  나이중앙값  여자비율  전문대이상비율
+dept
+고용서비스정책  1000   40.0   0.55      0.91
+기계공학      1500   46.0   0.25      0.55
+데이터경영     2000   41.0   0.36      0.91
+...</code></pre>
+
+<h3>두 컬럼으로 묶기</h3>
+<pre><code>jobs.groupby(["dept", "job"]).agg(나이중앙값=("age", "median"), ...)</code></pre>
+<p>리스트로 두 컬럼을 주면 (학과, 직무) 조합마다 묶는다. 결과의 행 이름이 두 층이 되는데, 이를 MultiIndex라고 한다. 같은 학과 이름은 첫 줄에만 찍히고 아래는 비어 보인다.</p>
+</section>
+
+<!-- 10 -->
+<section id=text>
+<h2><span class=no>10</span>서술문 읽기<span class=where>5. 서술문 읽기와 낱말 세기</span></h2>
+<pre><code>for _, r in mine.sample(3, random_state=42).iterrows():
+    print("=" * 90)
+    print(r["occupation"], "|", r["sex"], r["age"], "세 |", r["education_level"])
+    print("[직업 페르소나]", r["professional_persona"])
+    print("[경력 목표]", r["career_goals_and_ambitions"])</code></pre>
+<div class=tablewrap><table>
+<thead><tr><th>부분</th><th>뜻</th></tr></thead>
+<tbody>
+<tr><td><code>mine.sample(3, random_state=42)</code></td><td>행 3개를 무작위로 뽑는다. <code>random_state</code>를 고정하면 매번 같은 3명이 나온다. 숫자 42에 특별한 뜻은 없다. 다른 숫자를 넣으면 다른 3명이 나온다</td></tr>
+<tr><td><code>.iterrows()</code></td><td>행을 하나씩 꺼내 준다. 한 번에 (행 번호, 행 내용) 두 개를 준다</td></tr>
+<tr><td><code>for _, r in ...</code></td><td>두 값을 <code>_</code>와 <code>r</code>에 나눠 받는다. 행 번호는 쓰지 않으므로 "버리는 값"이라는 관례로 <code>_</code>라고 이름 붙였다. <code>r["age"]</code>처럼 컬럼 이름으로 그 사람의 값을 꺼낸다</td></tr>
+<tr><td>들여쓰기</td><td><code>for</code> 줄 끝의 <code>:</code> 아래 들여 쓴 네 줄이 한 사람마다 반복된다</td></tr>
+<tr><td><code>"=" * 90</code></td><td>문자열에 정수를 곱하면 그만큼 반복한다. <code>=</code> 90개로 된 구분선</td></tr>
+<tr><td><code>print(a, "|", b)</code></td><td>쉼표로 나열한 값을 공백 하나씩 띄워 출력한다. 그래서 출력이 <code>43 세</code>처럼 숫자와 "세" 사이가 띄어진다</td></tr>
+</tbody></table></div>
+<p class=note>표 전체를 반복문으로 돌리는 일은 느리다. <code>iterrows</code>는 이 셀처럼 몇 줄만 사람이 읽기 좋게 찍을 때 쓴다. 계산은 컬럼 단위 연산으로 한다.</p>
+</section>
+
+<!-- 11 -->
+<section id=strcount>
+<h2><span class=no>11</span>글자 수와 낱말 포함 비율<span class=where>5-1, 5-2</span></h2>
+<p>문자열 컬럼 뒤에 <code>.str</code>을 붙이면 문자열 함수를 행마다 적용한다. 결과는 다시 Series다.</p>
+
+<h3>서술문 길이</h3>
+<pre><code>jobs["글자수"] = jobs["professional_persona"].str.len()
+jobs.groupby(["dept", "job"])["글자수"].median().sort_values()</code></pre>
+<p><code>str.len()</code>은 글자 수다. 공백과 문장부호도 한 글자로 센다. 새 컬럼으로 저장한 뒤 (학과, 직무)마다 중앙값을 내고 <code>sort_values()</code>로 작은 순 정렬한다. 소프트웨어 개발 500명의 중앙값은 175자다.</p>
+
+<h3>특정 낱말이 들어간 비율</h3>
+<pre><code>WORD = "고객"
+jobs["포함"] = jobs["professional_persona"].str.contains(WORD)
+(jobs.groupby(["dept", "job"])["포함"].mean() * 100).round(1).sort_values(ascending=False)</code></pre>
+<ol>
+<li><code>str.contains(WORD)</code>로 서술문에 낱말이 있으면 True인 컬럼을 만든다.</li>
+<li>직무마다 평균을 내면 True의 비율, 곧 그 낱말이 들어간 서술문의 비율이다. 100을 곱해 퍼센트로 바꾼다.</li>
+<li><code>sort_values(ascending=False)</code>는 큰 순 정렬이다. 기본값(<code>True</code>)은 작은 순이다.</li>
+</ol>
+<p class=note><code>str.contains</code>는 기본적으로 찾을 글자를 정규표현식으로 해석한다. <code>(</code>, <code>.</code>, <code>+</code> 같은 기호가 든 낱말을 글자 그대로 찾으려면 <code>regex=False</code>를 넣는다.</p>
+</section>
+
+<!-- 12 -->
+<section id=words>
+<h2><span class=no>12</span>기술 목록의 낱말 세기<span class=where>5-3</span></h2>
+<pre><code>skills = mine["skills_and_expertise_list"].str.findall(r"'([^']+)'")
+skills = skills.explode()
+words = skills.str.split(" ").explode()
+words = words[words.str.len() &gt;= 2]
+words = words[~words.isin(["관리", "기술", "능력", "활용", "통한", "위한"])]
+words.value_counts().head(20)</code></pre>
+<p>한 줄이 한 단계다. 소프트웨어 개발 직무 500명을 예로 단계마다 값이 어떻게 바뀌는지 따라간다.</p>
+
+<h3>① 겉모습은 리스트, 실제는 문자열</h3>
+<p><code>skills_and_expertise_list</code>의 값은 리스트처럼 보이지만 자료형은 문자열(<code>str</code>)이다. 그래서 바로 항목을 꺼낼 수 없다.</p>
+<pre class=out><code>"['C/C++ 기반 시스템 프로그래밍', '리눅스 커널 최적화 및 튜닝', '임베디드 시스템 아키텍처 설계', '레거시 코드 분석 및 유지보수']"</code></pre>
+
+<h3>② str.findall로 항목 꺼내기</h3>
+<p><code>str.findall(패턴)</code>은 정규표현식 패턴에 맞는 부분을 모두 찾아 리스트로 돌려준다. 패턴 <code>r"'([^']+)'"</code>을 쪼개 보면 이렇다.</p>
+<div class=tablewrap><table>
+<thead><tr><th>조각</th><th>뜻</th></tr></thead>
+<tbody>
+<tr><td><code>r"..."</code></td><td>raw 문자열. 역슬래시(<code>\</code>)를 특수문자로 해석하지 않는다. 정규표현식은 습관처럼 <code>r</code>을 붙인다</td></tr>
+<tr><td><code>'</code> … <code>'</code></td><td>양 끝의 작은따옴표를 글자 그대로 찾는다</td></tr>
+<tr><td><code>[^']</code></td><td>작은따옴표가 아닌 글자 하나. <code>[^...]</code>는 "이것 말고"라는 뜻</td></tr>
+<tr><td><code>+</code></td><td>앞의 것이 한 번 이상 이어짐</td></tr>
+<tr><td><code>( )</code></td><td>캡처 그룹. <code>findall</code>은 괄호 안의 부분만 돌려주므로 따옴표가 빠진다</td></tr>
+</tbody></table></div>
+<pre class=out><code>['C/C++ 기반 시스템 프로그래밍', '리눅스 커널 최적화 및 튜닝', '임베디드 시스템 아키텍처 설계', '레거시 코드 분석 및 유지보수']   ← 이제 진짜 리스트</code></pre>
+
+<h3>③ explode로 펼치기</h3>
+<p><code>explode()</code>는 리스트가 든 칸을 항목 하나가 한 행이 되도록 펼친다. 500명의 리스트가 항목 2,077개로 늘어난다. 펼친 행들은 원래 행 번호를 그대로 물려받아 같은 번호가 여러 번 나온다.</p>
+<pre class=out><code>2500    C/C++ 기반 시스템 프로그래밍
+2500       리눅스 커널 최적화 및 튜닝
+2500      임베디드 시스템 아키텍처 설계
+...</code></pre>
+
+<p>세 사람짜리 작은 표로 보면 이렇다.</p>
+<div class=two>
+<div>
+<p><strong>펼치기 전.</strong> 칸 하나에 값이 여러 개 뭉쳐 있다.</p>
+<pre class=out><code>0  김철수  ['요리', '운전']
+1  이영희  ['엑셀', '운전']
+2  박민수  ['운전']</code></pre>
+</div>
+<div>
+<p><strong>explode() 후.</strong> 칸 하나에 값 하나다.</p>
+<pre class=out><code>0  요리
+0  운전
+1  엑셀
+1  운전
+2  운전</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>행 수가 바뀐다.</strong> 3명이 5행이 된다. 행 수가 사람 수가 아니라 항목 수를 따른다. 실제 데이터에서는 500명이 2,077행이 된다.</li>
+<li><strong>행 번호는 원래 사람의 번호를 쓴다.</strong> 왼쪽 숫자(인덱스)를 0, 1, 2…로 새로 매기지 않는다. 김철수에게서 나온 두 행이 모두 0번이다. 그래서 번호를 보면 누구의 항목이었는지 알 수 있다. 위의 2500이 네 번 나온 것도 네 기술이 모두 2500번 한 사람의 것이라는 뜻이다.</li>
+</ul>
+
+<h3>펼치는 이유</h3>
+<p>여러 사람의 리스트에 흩어져 있는 같은 항목을 한데 모아 세기 위해서다. <code>value_counts()</code>는 칸 하나를 값 하나로 본다.</p>
+<div class=two>
+<div>
+<p><strong>펼치지 않고 세면</strong></p>
+<pre class=out><code>[요리, 운전]    1
+[엑셀, 운전]    1
+[운전]          1</code></pre>
+<p>리스트 전체를 값 하나로 보므로 세 리스트가 모두 다른 값이 된다. "운전"이 세 명에게 있다는 사실이 드러나지 않는다.</p>
+</div>
+<div>
+<p><strong>펼친 뒤에 세면</strong></p>
+<pre class=out><code>운전    3
+요리    1
+엑셀    1</code></pre>
+<p>리스트 안에 갇혀 있던 "운전"이 각각 한 행이 되어 3으로 합쳐진다.</p>
+</div>
+</div>
+<p>세기에만 쓰는 것은 아니다. 항목 하나가 한 행이 되면 5절의 불리언 인덱싱을 그대로 쓸 수 있다. 아래 ⑤에서 <code>words[words.str.len() &gt;= 2]</code>로 한 글자 낱말을 거르는 것처럼, 항목 단위로 거르거나 묶으려면 먼저 펼쳐야 한다.</p>
+<p class=note>행 번호가 겹치면 "0번 행"을 골랐을 때 여러 줄이 나온다. 번호를 0부터 새로 매기려면 <code>explode(ignore_index=True)</code>로 쓴다. 이 노트북은 낱말을 세기만 하므로 번호가 겹쳐도 결과가 같다.</p>
+
+<h3>④ 띄어쓰기로 쪼개서 다시 펼치기</h3>
+<p><code>str.split(" ")</code>은 공백을 기준으로 잘라 리스트를 만든다. 다시 <code>explode()</code>하면 낱말 하나가 한 행이 된다. 항목 2,077개가 낱말 9,430개가 된다.</p>
+<pre class=out><code>['C/C++', '기반', '시스템', '프로그래밍', '리눅스', ...]</code></pre>
+
+<h3>⑤ 거르기 두 번</h3>
+<ul>
+<li><code>words[words.str.len() &gt;= 2]</code>: 두 글자 이상만 남긴다. "및" 같은 한 글자 낱말이 빠져 8,780개가 된다. 5절의 불리언 인덱싱과 같은 방식이다.</li>
+<li><code>words[~words.isin([...])]</code>: 목록에 있는 낱말을 뺀다. 어느 직무에나 흔히 나와 직무를 구별하는 데 도움이 안 되는 낱말들이다. 텍스트 분석에서는 이런 낱말을 불용어(stopword)라고 부른다.</li>
+</ul>
+
+<h3>⑥ 세기</h3>
+<p><code>value_counts().head(20)</code>로 많이 나온 낱말 20개를 본다. 소프트웨어 개발 직무에서는 최적화(456), 설계(429), 시스템(349)이 앞에 온다.</p>
+
+<div class=warn>띄어쓰기로 자르면 "데이터베이스를"과 "데이터베이스"가 다른 낱말로 세어진다. 조사를 떼어 내려면 형태소 분석기가 필요하다. 이 노트북은 기술 목록이 대부분 명사로 끝나는 짧은 구라서 띄어쓰기만으로도 쓸 만한 결과가 나온다.</div>
+</section>
+
+<!-- 13 -->
+<section id=check>
+<h2><span class=no>13</span>확인 목록</h2>
+<p>설명 없이 코드만 보고 뜻을 말할 수 있으면 체크한다. 체크 상태는 이 브라우저에 저장된다.</p>
+<ul class=todo>
+<li><label><input type=checkbox data-key=rcparams><span><code>rcParams</code>에서 한글 글꼴과 마이너스 기호를 설정하는 이유</span></label></li>
+<li><label><input type=checkbox data-key=url><span>GitHub Pages 주소로 parquet 파일을 읽는 원리와, 로컬에 저장해 두는 방법</span></label></li>
+<li><label><input type=checkbox data-key=shape><span><code>df.shape</code>에 괄호를 붙이지 않는 이유</span></label></li>
+<li><label><input type=checkbox data-key=selectcols><span><code>df["a"]</code>와 <code>df[["a", "b"]]</code>의 결과 차이</span></label></li>
+<li><label><input type=checkbox data-key=isna><span><code>isna().sum()</code>이 결측치 수, <code>isna().mean()</code>이 결측 비율이 되는 이유</span></label></li>
+<li><label><input type=checkbox data-key=notna><span><code>"해당없음"</code>이 결측치로 세지지 않는 이유</span></label></li>
+<li><label><input type=checkbox data-key=boolidx><span>불리언 인덱싱으로 행을 거르는 과정</span></label></li>
+<li><label><input type=checkbox data-key=ops><span><code>&amp;</code>, <code>|</code>, <code>~</code>의 뜻과 비교식을 괄호로 감싸는 이유</span></label></li>
+<li><label><input type=checkbox data-key=contains><span><code>!=</code>, <code>str.contains</code>, <code>isin</code>을 골라 쓰는 기준</span></label></li>
+<li><label><input type=checkbox data-key=valuecounts><span><code>value_counts(normalize=True)</code>의 결과</span></label></li>
+<li><label><input type=checkbox data-key=hist><span>히스토그램의 <code>bins</code>, <code>histtype</code>, <code>label</code>과 <code>plt.legend()</code>의 관계</span></label></li>
+<li><label><input type=checkbox data-key=barh><span><code>reindex</code>로 막대 순서를 정하는 방법과 이름이 틀렸을 때 생기는 일</span></label></li>
+<li><label><input type=checkbox data-key=crosstab><span><code>normalize="index"</code>, <code>"columns"</code>, <code>"all"</code>의 차이</span></label></li>
+<li><label><input type=checkbox data-key=newcol><span>새 컬럼을 True/False로 만든 뒤 <code>mean</code>으로 비율을 내는 방법</span></label></li>
+<li><label><input type=checkbox data-key=agg><span><code>groupby().agg(이름=("컬럼", "계산"))</code> 형식</span></label></li>
+<li><label><input type=checkbox data-key=iterrows><span><code>for _, r in df.iterrows()</code>에서 <code>_</code>와 <code>r</code>이 받는 값</span></label></li>
+<li><label><input type=checkbox data-key=strlen><span><code>.str.len()</code>, <code>.str.contains()</code>를 컬럼 전체에 적용하는 방식</span></label></li>
+<li><label><input type=checkbox data-key=findall><span>정규표현식 <code>'([^']+)'</code>이 찾는 것</span></label></li>
+<li><label><input type=checkbox data-key=explode><span><code>explode()</code>가 행 수와 행 번호를 바꾸는 방식</span></label></li>
+<li><label><input type=checkbox data-key=stopword><span>불용어를 빼고 낱말을 세는 이유</span></label></li>
+</ul>
+</section>
+
+</main>
+</div>
+<script>
+(function(){
+  var PREFIX="pandas_basics.check.";
+  document.querySelectorAll("ul.todo input[type=checkbox]").forEach(function(box){
+    var key=PREFIX+box.dataset.key;
+    try{box.checked=localStorage.getItem(key)==="1";}catch(e){}
+    box.addEventListener("change",function(){
+      try{localStorage.setItem(key,box.checked?"1":"0");}catch(e){}
+    });
+  });
+})();
+</script>
+<style>nav.toc a.on{background:var(--accent-soft,#eaf2fc);color:var(--ink,#0b0b0b);border-left-color:var(--accent,#2a78d6)}</style><script>(function(){var nav=document.querySelector('nav.toc');if(!nav)return;var links=[].slice.call(nav.querySelectorAll('a[href^="#"]'));var items=links.map(function(a){return{a:a,el:document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)))};}).filter(function(x){return x.el;});if(!items.length)return;var cur=null;function u(){var line=window.innerHeight*0.25,pick=items[0];items.forEach(function(x){if(x.el.getBoundingClientRect().top<=line)pick=x;});if(pick===cur)return;if(cur)cur.a.classList.remove('on');pick.a.classList.add('on');cur=pick;var t=pick.a.getBoundingClientRect().top-nav.getBoundingClientRect().top+nav.scrollTop,h=nav.clientHeight;if(nav.scrollHeight>h&&(t<nav.scrollTop||t>nav.scrollTop+h-40))nav.scrollTop=t-h/3;}window.addEventListener('scroll',u,{passive:true});window.addEventListener('resize',u);u();})();</script><style>.totop{--tt-bg:#0b0b0b;--tt-ink:#e9e8e2;--tt-on:#2a78d6;position:fixed;right:24px;bottom:24px;z-index:60;width:46px;height:46px;border-radius:50%;border:0;background:var(--tt-bg);color:var(--tt-ink);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;font-family:system-ui,sans-serif}.totop.show{opacity:1;visibility:visible;transform:none}.totop:hover{background:var(--tt-on)}@media (max-width:600px){.totop{right:14px;bottom:14px;width:42px;height:42px}}</style><button id="totop" class="totop" type="button" title="맨 위로" aria-label="맨 위로">↑</button><script>(function(){var b=document.getElementById('totop');if(!b)return;var LIM=600;function u(){b.classList.toggle('show',window.scrollY>LIM);}window.addEventListener('scroll',u,{passive:true});u();b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();</script></body></html>
