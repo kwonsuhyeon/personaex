@@ -41,9 +41,17 @@ papers-wiki 노트: [[papers:Pearl_2009_Causality|Pearl 2009]] · [[papers:Pearl
 - 이상윤, 김용남 (2026). 공통추세 가정 위반에 강건한 이중차분법의 타당성 검증: 조건부 지역 독립성 검정의 적용. 교육평가연구, 39(1), 55-75.
 - 정계룡, 김용남 (2026). 인과그래프 관점에서 본 통제변수의 기능과 역할. 교육평가연구, 39(1), 77-99.
 
+**웹 자료**
+
+- Se, K., & Eum, B. (2025. 5. 12.). Topic #36: '인과 (Causal) AI'란 무엇인가? Turing Post Korea. https://turingpost.co.kr/p/topic-36-causal-ai — 4.5 읽을거리
+
 **원문 미확보 (특강 슬라이드 재인용)**
 
 - Hünermund, P., Kaminski, J., & Schmitt, C. (2021). Causal Machine Learning and Business Decision Making. Working Paper. https://causalscience.org/Working-Paper.pdf — 4.1 지도의 출처
+
+**원문 미확보 (Turing Post 글 속 인용)**
+
+- Richens, J., & Everitt, T. (2024). Robust agents learn causal world models. ICLR 2024. https://arxiv.org/abs/2402.10877
 
 **원문 미확보 (정계룡·김용남, 2026 속 인용으로만 언급)**
 
