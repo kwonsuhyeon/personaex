@@ -1,0 +1,137 @@
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f6f7f9;
+  --bg-side: #fbfbfc;
+  --text: #1f2328;
+  --muted: #5b6470;
+  --line: #e2e5ea;
+  --accent: #2f5bd3;
+  --accent-soft: #eaf0ff;
+  --page-max: 1360px;
+  --side-w: 260px;
+  --radius: 10px;
+  --font: "Pretendard", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --mono: "Consolas", "D2Coding", monospace;
+
+  /* 위젯 상태색 */
+  --node-x: #2f5bd3;
+  --node-y: #7a3fc8;
+  --node-ctrl: #f2b705;
+  --node-latent: #9aa3ad;
+  --path-causal: #1f9d55;
+  --path-bias: #d64545;
+  --path-closed: #c3c8cf;
+
+  /* 상자 */
+  --box-answer: #eaf7ef;  --box-answer-line: #1f9d55;
+  --box-note: #eef3ff;    --box-note-line: #2f5bd3;
+  --box-warn: #fff4e5;    --box-warn-line: #e08a00;
+  --box-extra: #f4f4f6;   --box-extra-line: #8a8f98;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16.5px; line-height: 1.75; }
+
+.layout { display: grid; grid-template-columns: var(--side-w) 1fr; max-width: calc(var(--page-max) + var(--side-w)); margin: 0 auto; }
+nav.toc { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 28px 18px; border-right: 1px solid var(--line); background: var(--bg-side); font-size: 14px; }
+nav.toc .toc-title { font-weight: 700; margin-bottom: 12px; }
+nav.toc a { display: block; color: var(--muted); text-decoration: none; padding: 3px 8px; border-radius: 6px; line-height: 1.45; }
+nav.toc a.h2 { color: var(--text); font-weight: 600; margin-top: 10px; }
+nav.toc a.h3 { padding-left: 20px; font-size: 13px; }
+nav.toc a.active { background: var(--accent-soft); color: var(--accent); }
+nav.toc .progress { margin-top: 18px; font-size: 12.5px; color: var(--muted); }
+
+main { padding: 36px 48px 120px; min-width: 0; }
+header.hero { border-bottom: 1px solid var(--line); padding-bottom: 20px; margin-bottom: 8px; }
+header.hero h1 { font-size: 30px; margin: 0 0 6px; }
+header.hero p { margin: 4px 0; color: var(--muted); }
+
+h2 { font-size: 25px; margin: 64px 0 12px; padding-top: 12px; border-top: 3px solid var(--text); }
+h3 { font-size: 20px; margin: 40px 0 10px; }
+h4 { font-size: 17px; margin: 28px 0 8px; }
+p { margin: 10px 0; }
+a { color: var(--accent); }
+code { font-family: var(--mono); background: var(--bg-soft); padding: 1px 5px; border-radius: 4px; font-size: 0.92em; }
+pre { background: var(--bg-soft); padding: 12px 14px; border-radius: 8px; overflow-x: auto; font-size: 13.5px; line-height: 1.5; }
+pre code { background: none; padding: 0; }
+blockquote { margin: 12px 0; padding: 6px 16px; border-left: 4px solid var(--line); color: var(--muted); }
+ul, ol { padding-left: 24px; }
+li { margin: 3px 0; }
+dfn { font-style: normal; font-weight: 700; border-bottom: 2px solid var(--accent-soft); }
+.lead { font-size: 15px; color: var(--muted); background: var(--bg-soft); border-radius: 8px; padding: 8px 14px; }
+
+table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 15px; }
+th, td { border: 1px solid var(--line); padding: 8px 10px; vertical-align: middle; text-align: left; }
+th { background: var(--bg-soft); font-weight: 600; }
+
+.box { border-left: 5px solid; border-radius: 8px; padding: 12px 18px; margin: 18px 0; }
+.box .box-title { font-weight: 700; margin-bottom: 4px; }
+.box.answer { background: var(--box-answer); border-color: var(--box-answer-line); }
+.box.note { background: var(--box-note); border-color: var(--box-note-line); }
+.box.warn { background: var(--box-warn); border-color: var(--box-warn-line); }
+.box.extra { background: var(--box-extra); border-color: var(--box-extra-line); }
+.badge-extra { display: inline-block; font-size: 12px; font-weight: 600; color: var(--box-extra-line); border: 1px solid var(--box-extra-line); border-radius: 999px; padding: 0 8px; margin: 0 4px; vertical-align: 1px; }
+
+/* 체크리스트 */
+ul.check { list-style: none; padding-left: 4px; background: var(--bg-soft); border-radius: 8px; padding: 10px 16px; }
+ul.check label { cursor: pointer; display: flex; gap: 10px; align-items: baseline; }
+ul.check input { transform: scale(1.15); }
+ul.check input:checked + span { color: var(--muted); text-decoration: line-through; }
+
+/* 논문 카드 */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; margin: 16px 0; }
+.card { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px; background: #fff; }
+.card h4 { margin: 0 0 6px; font-size: 16px; }
+.card .meta { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+.card .tag { display: inline-block; font-size: 12px; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 0 8px; margin-right: 4px; }
+.card ul { margin: 6px 0; font-size: 15px; }
+
+/* DAG 위젯 */
+.dag { border: 1px solid var(--line); border-radius: var(--radius); margin: 20px 0; overflow: hidden; }
+.dag .dag-head { background: var(--bg-soft); padding: 8px 16px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+.dag .dag-head button { font: inherit; font-size: 13px; border: 1px solid var(--line); background: #fff; border-radius: 6px; padding: 2px 10px; cursor: pointer; }
+.dag .dag-body { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+.dag svg { width: 100%; height: auto; display: block; background: #fff; }
+.dag .dag-panel { border-left: 1px solid var(--line); padding: 12px 16px; font-size: 14.5px; }
+.dag .hint { color: var(--muted); font-size: 13px; }
+.dag .paths { list-style: none; padding: 0; margin: 8px 0; }
+.dag .paths li { padding: 4px 8px; border-radius: 6px; margin: 3px 0; cursor: default; font-family: var(--mono); font-size: 13.5px; }
+.dag .paths li.causal.open { background: #e6f5ec; }
+.dag .paths li.bias.open { background: #fdeaea; }
+.dag .paths li.closed { background: var(--bg-soft); color: var(--muted); }
+.dag .paths li .why { font-family: var(--font); font-size: 12.5px; color: var(--muted); }
+.dag .verdict { font-weight: 700; padding: 8px 10px; border-radius: 6px; margin: 8px 0; }
+.dag .verdict.ok { background: var(--box-answer); color: #12693a; }
+.dag .verdict.bad { background: #fdeaea; color: #a32626; }
+.dag .verdict.warn { background: var(--box-warn); color: #8a5300; }
+.dag .dag-note { margin-top: 8px; font-size: 14px; }
+.dag .extra-msg { margin-top: 8px; padding: 6px 10px; background: var(--box-warn); border-radius: 6px; font-size: 14px; }
+.dag details { margin-top: 10px; font-size: 13px; }
+.dag.static { display: inline-block; margin: 6px 8px 6px 0; width: calc(25% - 10px); min-width: 220px; vertical-align: top; }
+.dag.static .dag-head { font-family: var(--mono); font-weight: 400; }
+
+.node { cursor: pointer; }
+.node.latent { cursor: not-allowed; }
+.node rect { fill: #fff; stroke: #5b6470; stroke-width: 1.6; }
+.node.is-x rect { fill: var(--node-x); stroke: var(--node-x); }
+.node.is-y rect { fill: var(--node-y); stroke: var(--node-y); }
+.node.is-x text, .node.is-y text { fill: #fff; }
+.node.ctrl rect { fill: var(--node-ctrl); stroke: #8a6a00; stroke-width: 3; }
+.node.latent rect { stroke: var(--node-latent); stroke-dasharray: 5 4; }
+.node.latent text { fill: var(--muted); }
+.node text { font-family: var(--font); font-size: 14px; dominant-baseline: middle; text-anchor: middle; pointer-events: none; }
+.edge { stroke: var(--path-closed); stroke-width: 2.2; fill: none; }
+.edge.causal { stroke: var(--path-causal); stroke-width: 3; }
+.edge.bias { stroke: var(--path-bias); stroke-width: 3; }
+.edge.plain { stroke: #6b7380; }
+
+@media print { nav.toc { display: none; } .layout { display: block; } }
+
+/* 개입 그림: 지워진 화살표, 값을 고정한 노드, 2개 나란히 */
+.edge.removed { stroke: var(--path-bias); stroke-width: 2; stroke-dasharray: 6 5; opacity: .55; }
+.cut-mark { font-family: var(--font); font-size: 13px; font-weight: 700; fill: var(--path-bias); }
+.node.fixed rect { stroke: #12306e; stroke-width: 3.5; }
+.dagrow.n2 .dag.static { width: calc(50% - 10px); }
+.dag-legend { font-size: 13.5px; color: var(--muted); margin: 2px 0 14px; }
+.dag-legend .sw { display: inline-block; width: 22px; height: 0; border-top: 3px solid; vertical-align: middle; margin: 0 4px 0 12px; }
