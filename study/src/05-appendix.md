@@ -43,7 +43,7 @@ papers-wiki 노트: [[papers:Pearl_2009_Causality|Pearl 2009]] · [[papers:Pearl
 
 **웹 자료**
 
-- Se, K., & Eum, B. (2025. 5. 12.). Topic #36: '인과 (Causal) AI'란 무엇인가? Turing Post Korea. https://turingpost.co.kr/p/topic-36-causal-ai — 4.5 읽을거리
+- Se, K., & Eum, B. (2025. 5. 12.). Topic #36: '인과 (Causal) AI'란 무엇인가? Turing Post Korea. https://turingpost.co.kr/p/topic-36-causal-ai — 4.4 읽을거리
 
 **원문 미확보 (특강 슬라이드 재인용)**
 

@@ -143,7 +143,7 @@ const html = `<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>인과 그래프 스터디 — SEM 연구자를 위한 인과추론</title>
+<title>인과 그래프 스터디</title>
 <style>
 ${read('style.css')}
 </style>
@@ -158,7 +158,6 @@ ${tocHtml}
 <main>
 <header class="hero">
 <h1>인과 그래프 스터디</h1>
-<p>"SEM 연구자를 위한 인과추론 — AI 시대의 구조적 인과 모델(SCM) 입문" 특강 대비 · papers-wiki 자료 기반</p>
 <p>빌드 ${built} · 원본 <code>papers-wiki/wiki/study/src/*.md</code> → <code>node build.js</code></p>
 </header>
 ${sections}
